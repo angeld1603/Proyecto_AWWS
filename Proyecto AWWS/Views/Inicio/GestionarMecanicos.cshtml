@@ -1,0 +1,265 @@
+﻿@model IEnumerable<CapaEntidad.Mecanicos>
+
+@{
+    ViewBag.Title = "Gestionar Mecánicos";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title</title>
+    <link href="~/Content/css/styles.css" rel="stylesheet" />
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+</head>
+<body>
+    <section class="wrapper">
+        <div class="container">
+            <div class="text-end mb-3">
+                <a href="@Url.Action("Registrar", "Inicio")" class="btn btn-register">
+                    <span class="material-icons">add_circle</span>
+                    <span>Registrar Mecánico</span>
+                </a>
+            </div>
+            <br />
+            <div class="container">
+                <div class="row">
+                    @if (Model != null && Model.Any())
+                    {
+                        foreach (var mecanico in Model)
+                        {
+                            <div class="col-md-4 mb-4">
+                                <div class="card mecanico-card">
+                                    <div class="card-body d-flex align-items-center">
+                                        <div class="flex-grow-1">
+                                            <h5 class="card-title">@mecanico.Nombre</h5>
+                                            <p class="card-text"><strong>Número de Documento:</strong> @mecanico.NumeroDocumento</p>
+                                            <p class="card-text"><strong>Especialidad:</strong> @mecanico.Especialidad</p>
+                                            <div class="mt-3">
+                                                <a href="@Url.Action("Editar", "Inicio", new { id = mecanico.NumeroDocumento })" class="btn btn-warning">Editar</a>
+                                                <a href="@Url.Action("Eliminar", "Inicio", new { id = mecanico.NumeroDocumento })" class="btn btn-danger" onclick="return handleDelete(event, '@Url.Action("Eliminar", "Inicio", new { id = mecanico.NumeroDocumento })')">Eliminar</a>
+                                            </div>
+                                        </div>
+                                        <div class="ms-3 text-center mecanico-img-container">
+                                            <img src="@mecanico.ImagenUrl" alt="@mecanico.Nombre" class="img-fluid" style="width: 80px; height: 80px; object-fit: cover;">
+                                            <!-- Botón para abrir el formulario de carga de imagen -->
+                                            <a href="#" class="btn btn-cargar-foto mt-2 small-btn" data-bs-toggle="modal" data-bs-target="#modalCargarFoto" data-id="@mecanico.NumeroDocumento">
+                                                <span class="material-icons">add_circle</span>
+                                                <span>Cargar foto</span>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    }
+                    else
+                    {
+                        <div class="col">
+                            <p>No hay mecánicos registrados.</p>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Modal de Cargar Foto -->
+    <div class="modal fade" id="modalCargarFoto" tabindex="-1" role="dialog" aria-labelledby="modalCargarFotoLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalCargarFotoLabel">Cargar Foto</h5>
+                    <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    @using (Html.BeginForm("SubirFoto", "Inicio", FormMethod.Post, new { enctype = "multipart/form-data" }))
+                    {
+                        @Html.AntiForgeryToken()
+                        <input type="hidden" id="modalMecanicoId" name="numeroDocumento" />
+                        <div class="form-group">
+                            <label for="archivo">Seleccionar foto:</label>
+                            <input type="file" name="archivo" id="archivo" />
+                        </div>
+                        <button type="submit" class="btn btn-primary">Subir</button>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+    <div class="container-fluid text-center mt-5 fixed-bottom" style="background-color: #D0D1D5; padding-top: 1rem; padding-bottom: 1rem;">
+        <footer>AWWS</footer>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"></script>
+    <script>
+        // Manejo del botón para abrir el modal
+        document.querySelectorAll('.btn-cargar-foto').forEach(button => {
+            button.addEventListener('click', function () {
+                const id = this.getAttribute('data-id');
+                document.getElementById('modalMecanicoId').value = id;
+            });
+        });
+
+        function handleDelete(event, url) {
+            event.preventDefault(); // Previene el comportamiento por defecto del enlace
+
+            Swal.fire({
+                title: '¿Estás seguro?',
+                text: "¡Esta acción no se puede deshacer!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#ffc107',
+                confirmButtonText: 'Sí, eliminar',
+                cancelButtonText: 'Cancelar'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // Si el usuario confirma, redirige a la URL
+                    window.location.href = url;
+                }
+            });
+        }
+    </script>
+
+</body>
+</html>
+
+
+<style>
+    /* Google Poppins Font CDN Link */
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    /* Variables */
+    :root {
+        --primary-font-family: 'Poppins', sans-serif;
+        --light-white: #f5f8fa;
+        --gray: #5e6278;
+        --gray-1: #e3e3e3;
+        --primary-color: #FA6C17;
+    }
+
+    body {
+        font-family: var(--primary-font-family);
+    }
+
+    /* Main CSS */
+    .wrapper {
+        padding: 20px;
+        background-color: var(--light-white);
+        min-height: 100vh;
+    }
+
+    .mecanico-card {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        margin: 0; /* Asegúrate de que no haya margen */
+    }
+
+    .card-body {
+        padding: 15px; /* Ajusta el padding según sea necesario */
+        margin: 0; /* Asegúrate de que no haya margen adicional */
+    }
+
+    .mecanico-card .card-body {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+    }
+
+    .mecanico-img-container {
+        width: 100px; /* Ancho fijo para el contenedor de la imagen y el botón */
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        margin: 0; /* Asegúrate de que no haya margen adicional */
+    }
+
+        .mecanico-img-container img {
+            margin-bottom: 10px;
+            width: 80px;
+            height: 80px;
+            object-fit: cover;
+        }
+
+    .btn {
+        margin: 0 5px;
+        padding: 5px 10px;
+    }
+
+    .btn-register {
+        background-color: #fa6c17;
+        border-radius: 50px;
+        padding: 10px 10px;
+        width: 255px;
+        color: #fff;
+        font-weight: bold;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        text-decoration: none;
+        transition: all 0.3s ease-in-out;
+        display: inline-block; /* Cambia display a inline-block */
+        text-align: center; /* Centra el texto */
+    }
+
+        .btn-register .material-icons {
+            vertical-align: middle; /* Alinea el icono verticalmente */
+            font-size: 24px;
+        }
+
+        .btn-register span {
+            vertical-align: middle; /* Alinea el texto verticalmente */
+            margin-left: 10px; /* Añade espacio entre el icono y el texto */
+        }
+
+        .btn-register:hover {
+            background-color: #e85910;
+            box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+        }
+
+    .btn-cargar-foto {
+        background-color: var(--primary-color);
+        padding: 4px 8px; /* Ajusta el tamaño del botón */
+        color: #fff;
+        font-weight: bold;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        text-decoration: none;
+        transition: all 0.3s ease-in-out;
+        text-align: center;
+        font-size: 14px; /* Ajusta el tamaño del texto */
+        margin-top: 10px; /* Ajusta el espacio entre la imagen y el botón */
+        width: 130px; /* Ajusta el ancho del botón */
+        margin-left: 0; /* Asegúrate de que el botón no esté pegado al borde */
+    }
+
+        .btn-cargar-foto .material-icons {
+            vertical-align: middle;
+            font-size: 18px; /* Ajusta el tamaño del icono */
+        }
+
+        .btn-cargar-foto span {
+            vertical-align: middle;
+            margin-left: 5px; /* Ajusta el espacio entre el icono y el texto */
+        }
+
+        .btn-cargar-foto:hover {
+            background-color: #e85910;
+            box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+        }
+</style>

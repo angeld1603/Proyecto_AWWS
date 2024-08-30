@@ -1,0 +1,125 @@
+﻿@model CapaEntidad.Vehiculos
+
+@{
+    ViewBag.Title = "Editar Vehículo";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title</title>
+    <link href="~/Content/css/styles.css" rel="stylesheet" />
+</head>
+<body>
+    <section class="wrapper">
+        <div class="container">
+            <h1>@ViewBag.Title</h1>
+            @using (Html.BeginForm("EditarVehiculos", "Inicio", FormMethod.Post))
+            {
+                @Html.AntiForgeryToken()
+                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+                <div class="form-group">
+                    <label for="Placa">Placa</label>
+                    @Html.EditorFor(m => m.placa, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly"} })
+                    @Html.ValidationMessageFor(m => m.placa, "", new { @class = "text-danger" })
+                </div>
+
+                <div class="form-group">
+                    <label for="Marca">Marca</label>
+                    @Html.EditorFor(m => m.marca, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(m => m.marca, "", new { @class = "text-danger" })
+                </div>
+
+                <div class="form-group">
+                    <label for="Modelo">Modelo</label>
+                    @Html.EditorFor(m => m.modelo, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(m => m.modelo, "", new { @class = "text-danger" })
+                </div>
+
+                <div class="form-group">
+                    <label for="Año">Año</label>
+                    @Html.EditorFor(m => m.año, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(m => m.año, "", new { @class = "text-danger" })
+                </div>
+
+                <div class="form-group mt-4">
+                    <input type="submit" value="Guardar" class="btn btn-primary" />
+                    <a href="@Url.Action("GestionarVehiculos", "Inicio")" class="btn btn-secondary">Cancelar</a>
+                </div>
+            }
+        </div>
+    </section>
+
+    <div class="container-fluid text-center mt-5 fixed-bottom">
+        <footer>AWWS</footer>
+    </div>
+</body>
+</html>
+
+<style>
+    /* Same styles from the "Registrar Vehículo" view */
+    .wrapper {
+        padding: 20px;
+        background-color: #f5f8fa;
+        min-height: 100vh;
+    }
+
+        .wrapper h1 {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #FA6C17;
+            margin-bottom: 20px;
+        }
+
+    .form-group {
+        margin-bottom: 15px;
+    }
+
+    .form-control {
+        border-radius: 0;
+        border: 1px solid #ced4da;
+        padding: 10px;
+        font-size: 1rem;
+        width: 100%;
+    }
+
+    .btn {
+        margin: 0 5px;
+        padding: 10px 20px;
+    }
+
+    .btn-primary {
+        background-color: #FA6C17;
+        border: none;
+        color: #fff;
+    }
+
+        .btn-primary:hover {
+            background-color: #e85910;
+        }
+
+    .btn-secondary {
+        background-color: #6c757d;
+        border: none;
+        color: #fff;
+    }
+
+        .btn-secondary:hover {
+            background-color: #5a6268;
+        }
+
+    .fixed-bottom {
+        background-color: #D0D1D5;
+        padding: 1rem;
+    }
+
+    footer {
+        margin: 0;
+        padding: 10px 0;
+        color: #333;
+    }
+</style>

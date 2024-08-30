@@ -1,0 +1,129 @@
+﻿@{ Layout = null; }
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <meta name="description" content="" />
+    <meta name="author" content="" />
+    <title>AWWS - Auto Workshop Web Services</title>
+    <link href="~/Content/css/styles.css" rel="stylesheet" />
+    <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
+</head>
+
+<body class="bg-primary">
+    <div id="layoutAuthentication">
+        <div id="layoutAuthentication_content">
+            <main>
+                <div class="container-fluid" style="background-color: #FA6C17; padding-top: 1rem; padding-bottom: 1rem;">
+                    <div class="row align-items-center">
+                        <div class="col-md-6">
+                            <div class="d-flex align-items-center">
+                                <h1 class="display-5">Auto Workshop Web Services</h1>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="container">
+                    <div class="row justify-content-center">
+                        <div class="col-lg-5">
+                            <div class="card shadow-lg border-0 rounded-lg mt-5">
+                                <div class="card-header" style="background-color: #4B4B4B">
+                                    <h3 class="text-center font-weight-light my-4" style="color:white">Ingrese sus credenciales</h3>
+                                </div>
+                                <div class="card-body">
+                                    <form action="@Url.Action("Login", "Login")" method="post">
+                                        <div class="mb-3 position-relative">
+                                            <div class="form-floating">
+                                                <input class="form-control" type="number" name="idUsuario" id="inputIdentificacion" placeholder="Identificación" required />
+                                                <label for="inputIdentificacion">Identificación</label>
+                                            </div>
+                                        </div>
+
+                                        <div class="mb-3 position-relative">
+                                            <div class="form-floating">
+                                                <input class="form-control" name="Contraseña" type="password" id="inputPassword" placeholder="Contraseña" required />
+                                                <label for="inputPassword">Contraseña</label>
+                                            </div>
+                                            <button class="btn btn-outline-secondary position-absolute top-50 end-0 translate-middle-y" type="button" id="togglePassword" onclick="togglePasswordVisibility()">
+                                                <i class="fa fa-eye"></i>
+                                            </button>
+                                            <a href="@Url.Action("ReestablecerContraseña","Login")" class="float-end mt-2">Reestablecer contraseña</a>
+                                            <a href="@Url.Action("Registro","Login")" class="float-start mt-2">Registrate</a>
+                                        </div>
+                                        <br />
+                                        @if (TempData["Error"] != null)
+                                        {
+                                            <div class="alert alert-danger" role="alert">
+                                                @TempData["Error"]
+                                            </div>}
+
+                                        <div class="d-flex justify-content-center mt-4 mb-0">
+                                            <button class="btn btn-primary" style="background-color: #FA6C17 " type="submit">Iniciar Sesión</button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <div class="container-fluid text-center mt-5 fixed-bottom" style="background-color: #D0D1D5; padding-top: 1rem; padding-bottom: 1rem;">
+        <div class="container">
+            <footer>AWWS</footer>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+    <script src="~/Scripts/js/scripts.js"></script>
+    <script>
+        function togglePasswordVisibility() {
+            var passwordInput = document.getElementById("inputPassword");
+            var toggleButton = document.getElementById("togglePassword");
+            var icon = toggleButton.querySelector("i");
+
+            if (passwordInput.type === "password") {
+                passwordInput.type = "text";
+                icon.classList.remove("fa-eye");
+                icon.classList.add("fa-eye-slash");
+            } else {
+                passwordInput.type = "password";
+                icon.classList.remove("fa-eye-slash");
+                icon.classList.add("fa-eye");
+            }
+        }
+    </script>
+</body>
+</html>
+
+
+<style>
+    .mr-2,
+    .btn-lg {
+        margin-right: 20px;
+    }
+
+    .alert {
+        margin-top: 10px;
+    }
+
+    .position-relative .form-floating .form-control {
+        padding-right: 2.5rem; /* Espacio para el botón dentro del input */
+    }
+
+    .position-relative button {
+        right: 10px; /* Ajuste de la posición del botón */
+    }
+
+    .display-5 {
+        font-size: 2rem;
+        font-weight: bold;
+    }
+
+</style>

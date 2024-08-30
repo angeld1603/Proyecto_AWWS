@@ -1,0 +1,138 @@
+﻿@model CapaEntidad.Mecanicos
+
+@{
+    ViewBag.Title = "Registrar Mecánico";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title</title>
+    <link href="~/Content/css/styles.css" rel="stylesheet" />
+</head>
+<body>
+    <section class="wrapper">
+        <div class="container">
+            <h1>@ViewBag.Title</h1>
+
+            @using (Html.BeginForm("Registrar", "Inicio", FormMethod.Post))
+            {
+                @Html.AntiForgeryToken()
+                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Nombre)
+                    @Html.TextBoxFor(model => model.Nombre, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(model => model.Nombre, "", new { @class = "text-danger" })
+                </div>
+
+                <div class="form-group">
+                    <label for="Número de documento">Número de documento</label>
+                    @Html.TextBoxFor(model => model.NumeroDocumento, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(model => model.NumeroDocumento, "", new { @class = "text-danger" })
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Especialidad)
+                    @Html.TextBoxFor(model => model.Especialidad, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(model => model.Especialidad, "", new { @class = "text-danger" })
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Contraseña)
+                    @Html.PasswordFor(model => model.Contraseña, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(model => model.Contraseña, "", new { @class = "text-danger" })
+                </div>
+
+                <div class="form-group mt-4">
+                    <input type="submit" value="Registrar" class="btn btn-primary" />
+                    <a href="@Url.Action("GestionarMecanicos", "Inicio")" class="btn btn-secondary">Cancelar</a>
+                </div>
+            }
+        </div>
+    </section>
+
+    <div class="container-fluid text-center mt-5 fixed-bottom">
+        <footer>AWWS</footer>
+    </div>
+</body>
+</html>
+
+<style>
+    html, body {
+        overflow: hidden;
+        height: 100%;
+        margin: 0;
+    }
+
+    .wrapper {
+        padding: 20px;
+        background-color: #f5f8fa;
+        min-height: 100vh;
+        overflow: hidden;
+    }
+
+        .wrapper h1 {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #FA6C17;
+            margin-bottom: 20px;
+        }
+
+    .form-group {
+        margin-bottom: 15px;
+    }
+
+    .form-label {
+        display: block;
+        font-weight: bold;
+        margin-bottom: 0.5rem;
+    }
+
+    .form-control {
+        border-radius: 0;
+        border: 1px solid #ced4da;
+        padding: 10px;
+        font-size: 1rem;
+        width: 100%;
+    }
+
+    .btn {
+        margin: 0 5px;
+        padding: 10px 20px;
+    }
+
+    .btn-primary {
+        background-color: #FA6C17;
+        border: none;
+        color: #fff;
+    }
+
+        .btn-primary:hover {
+            background-color: #e85910;
+        }
+
+    .btn-secondary {
+        background-color: #6c757d;
+        border: none;
+        color: #fff;
+    }
+
+        .btn-secondary:hover {
+            background-color: #5a6268;
+        }
+
+    .fixed-bottom {
+        background-color: #D0D1D5;
+        padding: 1rem;
+    }
+
+    footer {
+        margin: 0;
+        padding: 10px 0;
+        color: #333;
+    }
+</style>
