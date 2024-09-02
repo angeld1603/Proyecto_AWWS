@@ -296,11 +296,12 @@
     <Content Include="Views\Inicio\Registrar.cshtml" />
     <Content Include="Views\Inicio\RegistrarVehiculos.cshtml" />
     <Content Include="Views\Inicio\EditarV.cshtml" />
+    <Content Include="Views\Mecanico\Inicio.cshtml" />
+    <Content Include="Views\Mecanico\GestionarReparaciones.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Models\" />
-    <Folder Include="Views\Mecanico\" />
     <Folder Include="Views\Usuarios\" />
   </ItemGroup>
   <ItemGroup>

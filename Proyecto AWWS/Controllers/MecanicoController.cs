@@ -8,8 +8,11 @@ namespace Proyecto_AWWS.Controllers
 {
     public class MecanicoController : Controller
     {
-        // GET: Mecanico
-        public ActionResult Index()
+        public ActionResult Inicio()
+        {
+            return View();
+        }
+        public ActionResult GestionarReparaciones()
         {
             return View();
         }
