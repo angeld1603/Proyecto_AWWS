@@ -1,48 +1,46 @@
 ﻿<!DOCTYPE html>
-<html>
+<html lang="es">
 <head>
-    <meta charset="utf-8" />
+    <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@ViewBag.Title</title>
     <link href="~/Content/css/styles.css" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" />
     <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
 </head>
-
-<body>
+<body class="background-image">
     <div>
-        <nav class="navbar">
-            <div class="navbar-title">
-                <h1 class="display-5">Auto Workshop Web Services</h1>
-            </div>
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+            <div class="container">
+                <a class="navbar-brand">Auto Workshop Web Services</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                        <li class="nav-item">
+                            <a class="nav-link" href="@Url.Action("Inicio", "Mecanico")">Inicio</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="@Url.Action("Gestionar reparaciones", "Mecanico")">Gestionar Mecánicos</a>
+                        </li>
+                    </ul>
+                    <ul class="navbar-nav ms-auto">
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle text-light" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="fas fa-user-circle"></i>
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown" style="background-color: rgba(var(--bs-dark-rgb), var(--bs-bg-opacity))">
+                                <li>
+                                    <a class="dropdown-item text-light" href="@Url.Action("Login", "Login")">
+                                        <i class="fas fa-sign-out-alt"></i> Cerrar Sesión
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
 
-            <div class="navbar-content">
-                <ul class="nav-list">
-                    <li><a href="@Url.Action("Inicio", "Mecanico")">Inicio</a></li>
-                </ul>
-            </div>
-
-            <div class="user-profile">
-                <i class="fas fa-user-circle"></i>
-                @if (Session["Nombre"] != null)
-                {
-                    @Session["Nombre"].ToString()
-                }
-                else
-                {
-                    <text>Invitado</text>
-                }
-                <div class="dropdown">
-                    <i class="fas fa-caret-down dropdown-toggle"></i>
-                    <div class="dropdown-menu">
-                        <a href="@Url.Action("Login", "Login")" class="logout-button">
-                            <i class="fas fa-sign-out-alt"></i> Cerrar Sesión
-                        </a>
-                    </div>
                 </div>
-            </div>
-
-            <div class="navbar-toggle" id="mobile-menu">
-                <span class="bar"></span>
             </div>
         </nav>
     </div>
@@ -55,181 +53,58 @@
 
     @RenderBody()
 
-
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
 </body>
 </html>
-<script>
-    document.addEventListener("DOMContentLoaded", function () {
-        const dropdownToggle = document.querySelector('.dropdown-toggle');
-        const dropdownMenu = document.querySelector('.dropdown-menu');
 
-        dropdownToggle.addEventListener('click', function () {
-            dropdownMenu.classList.toggle('show');
-        });
 
-        // Cerrar el menú si se hace clic fuera de él
-        document.addEventListener('click', function (event) {
-            if (!dropdownToggle.contains(event.target) && !dropdownMenu.contains(event.target)) {
-                dropdownMenu.classList.remove('show');
-            }
-        });
-    });
-
-</script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
 <style>
+    body.background-image {
+        background-image: url('~/Content/Images/fondo.png'); /* Ruta a tu imagen de fondo */
+        background-size: cover; /* Ajusta la imagen para cubrir todo el contenedor */
+        background-position: center center; /* Centra la imagen */
+        background-repeat: no-repeat; /* Evita que la imagen se repita */
+        min-height: 100vh; /* Asegura que el contenedor tenga al menos la altura de la ventana */
+    }
+
+    /* Mantén el resto de tus estilos */
+
     body {
         font-family: Arial, sans-serif;
         margin: 0;
         padding: 0;
         display: grid;
         min-height: 100vh;
+        box-sizing: border-box;
     }
 
     .navbar {
-        background-color: #4B4B4B;
-        overflow: hidden;
-        position: relative;
         padding: 15px;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
+        box-sizing: border-box;
     }
 
-    .navbar-title {
-        display: flex;
-        align-items: center;
-        color: white;
-    }
-
-    .display-5 {
+    .navbar-brand {
         font-size: 25px;
         font-weight: bold;
-        margin: 0;
     }
 
-    .navbar-content {
-        display: flex;
-        flex-grow: 1;
-        align-items: center;
-        justify-content: center; /* Centra horizontalmente los elementos dentro de este contenedor */
-    }
-
-    .nav-list {
-        list-style-type: none;
-        margin: 0;
-        padding: 0;
-        display: flex;
-        align-items: center;
-    }
-
-        .nav-list li {
-            margin: 0;
-            padding: 0;
-        }
-
-            .nav-list li a {
-                display: block;
-                color: black;
-                text-align: center;
-                padding: 8px 20px;
-                text-decoration: none;
-                transition: 0.3s ease;
-                background-color: #FA6C17;
-                margin-left: 25px;
-                border-radius: 10px;
-            }
-
-                .nav-list li a:hover {
-                    background-color: #575757;
-                }
-
-
-    .navbar-toggle {
-        display: none;
-        cursor: pointer;
-        position: absolute;
-        right: 20px;
-        top: 15px;
-        flex-direction: column;
-        justify-content: space-between;
-        width: 25px;
-        height: 20px;
-    }
-
-        .navbar-toggle .bar {
-            height: 3px;
-            width: 100%;
-            background-color: white;
-            border-radius: 10px;
-        }
-
-    @@media screen and (max-width: 768px) {
-        .navbar-content {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            width: 100%;
-        }
-
-        .nav-list {
-            display: none;
-            flex-direction: column;
-            width: 100%;
-            background-color: #333;
-        }
-
-            .nav-list.active {
-                display: flex;
-            }
-
-            .nav-list li {
-                text-align: center;
-                width: 100%;
-                padding: 10px 0;
-            }
-
-        /*.navbar-toggle {
-            display: flex;
-        }*/
-
-        .navbar-title {
-            position: static;
-            margin: 0;
-            justify-content: center;
-            width: 100%;
-        }
-    }
-
-    .user-profile {
-        position: relative;
-        display: flex;
-        align-items: center;
+    .navbar-nav .nav-link {
         color: white;
-        font-size: 18px;
-        margin-right: 15px;
+        padding: 8px 20px;
+        border-radius: 10px;
+        transition: 0.3s ease;
     }
 
-        .user-profile i {
-            margin-right: 8px;
-            font-size: 24px; /* Tamaño del ícono */
+        .navbar-nav .nav-link:hover {
+            background-color: #575757;
         }
-
-    .dropdown {
-        position: relative;
-        display: inline-block;
-    }
-
-    .dropdown-toggle {
-        cursor: pointer;
-    }
 
     .dropdown-menu {
         display: none;
         position: absolute;
         top: 100%; /* Coloca el menú justo debajo del ícono */
         right: 0;
-        background-color: #4B4B4B;
+        background-color: #00304D;
         border-radius: 5px;
         box-shadow: 0px 8px 16px rgba(0,0,0,0.2);
         min-width: 160px;
@@ -237,20 +112,19 @@
         padding: 10px 0;
     }
 
-        .dropdown-menu a {
-            color: white;
-            padding: 8px 16px;
-            text-decoration: none;
-            display: block;
-            transition: background-color 0.3s;
+    .dropdown-item {
+        color: white;
+        padding: 8px 16px;
+        text-decoration: none;
+        display: block;
+        transition: background-color 0.3s;
+    }
+
+        .dropdown-item:hover {
+            background-color: #575757;
         }
 
-            .dropdown-menu a:hover {
-                background-color: #575757;
-            }
-
-    /* Mostrar el menú desplegable al hacer clic */
-    .dropdown.show .dropdown-menu {
-        display: block;
+    .dropdown-toggle::after {
+        display: none; /* Eliminar el triángulo de despliegue de Bootstrap */
     }
 </style>
