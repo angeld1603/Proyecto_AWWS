@@ -56,7 +56,7 @@ namespace Proyecto_AWWS.Controllers
             {
                 Session["Nombre"] = mecanico.Nombre.Split()[0];
                 //Session["Rol"] = "Mecanico"; // Opcional, para diferenciar el rol
-                return RedirectToAction("Inicio", "Inicio");
+                return RedirectToAction("Inicio", "Mecanico");
             }
 
             // Buscar en la tabla de Clientes si no se encontró en la tabla de usuarios ni en la de Mecánicos
@@ -66,7 +66,7 @@ namespace Proyecto_AWWS.Controllers
             {
                 Session["Nombre"] = cliente.Nombre.Split()[0];
                 //Session["Rol"] = "Cliente"; // Opcional, para diferenciar el rol
-                return RedirectToAction("Inicio", "Inicio");
+                return RedirectToAction("Inicio", "Cliente");
             }
 
             // Si las credenciales no son válidas, mostrar un mensaje de error
