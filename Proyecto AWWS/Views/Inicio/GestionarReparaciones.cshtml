@@ -1,16 +1,71 @@
-﻿
+﻿@model IEnumerable<CapaEntidad.Reparacion>
+
 @{
-    ViewBag.Title = "Gestionar reparaciones";
+    ViewBag.Title = "Gestionar Reparación";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
 <!DOCTYPE html>
-<html>
+<html lang="es">
 <head>
-    <meta name="viewport" content="width=device-width" />
-    <title>Maquinas</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title</title>
+    <link href="~/Content/css/styles.css" rel="stylesheet" />
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
 </head>
 <body>
+    <section class="wrapper">
+        <div class="container">
+            <h1 class="text-center">Gestionar Reparación</h1>
+            @using (Html.BeginForm("RegistrarReparacion", "Reparacion", FormMethod.Post))
+            {
+                @Html.AntiForgeryToken()
 
+                <div class="form-group">
+                    <label for="VehiculoId">Seleccionar Vehículo</label>
+                    @Html.DropDownListFor(model => model.VehiculoId, new SelectList(ViewBag.Vehiculos, "Id", "Placa"), "Seleccione un vehículo", new { @class = "form-control" })
+                </div>
+
+                <div class="form-group">
+                    <label for="MecanicoId">Asignar Mecánico</label>
+                    @Html.DropDownListFor(model => model.MecanicoId, new SelectList(ViewBag.Mecanicos, "NumeroDocumento", "Nombre"), "Seleccione un mecánico", new { @class = "form-control" })
+                </div>
+
+                <div class="form-group">
+                    <label for="Descripcion">Descripción de la Reparación</label>
+                    @Html.TextAreaFor(model => model.Descripcion, new { @class = "form-control", rows = 3 })
+                </div>
+
+                <div class="form-group">
+                    <label for="Repuestos">Asignar Repuestos</label>
+                    @Html.TextBoxFor(model => model.Repuestos, new { @class = "form-control" })
+                </div>
+
+                <div class="form-group">
+                    <label for="FechaIngreso">Fecha de Ingreso</label>
+                    @Html.TextBoxFor(model => model.FechaIngreso, "{0:yyyy-MM-dd}", new { @class = "form-control", type = "date" })
+                </div>
+
+                <div class="form-group">
+                    <label for="FechaEntregaPrevista">Fecha de Entrega Prevista</label>
+                    @Html.TextBoxFor(model => model.FechaEntregaPrevista, "{0:yyyy-MM-dd}", new { @class = "form-control", type = "date" })
+                </div>
+
+                <div class="form-group">
+                    <label for="Estado">Estado de la Reparación</label>
+                    @Html.DropDownListFor(model => model.Estado, new SelectList(new List<SelectListItem>
+                    {
+                        new SelectListItem { Text = "Pendiente", Value = "Pendiente" },
+                        new SelectListItem { Text = "En Progreso", Value = "En Progreso" },
+                        new SelectListItem { Text = "Completada", Value = "Completada" }
+                    }, "Value", "Text"), "Seleccione el estado", new { @class = "form-control" })
+                </div>
+
+                <button type="submit" class="btn btn-primary mt-3">Registrar Reparación</button>
+            }
+        </div>
+    </section>
 </body>
 </html>
