@@ -19,5 +19,6 @@ namespace CapaEntidad
         public string Nombre { get; set; }
         public string Contraseña { get; set; }
         public int Edad { get; set; }
+
     }
 }

@@ -1,0 +1,185 @@
+﻿@model CapaEntidad.Reparacion
+
+@{
+    ViewBag.Title = "Registrar Reparación";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title</title>
+    <link href="~/Content/css/styles.css" rel="stylesheet" />
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            // Rellenar el campo IdCliente basado en la placa ingresada
+            $('#placa').on('change', function () {
+                var placa = $(this).val();
+                if (placa) {
+                    $.getJSON('@Url.Action("BuscarIdClientePorPlaca", "Inicio")', { placa: placa }, function (data) {
+                        $('#IdCliente').val(data.idCliente || "Cliente no encontrado");
+                    });
+                }
+            });
+
+            // Buscar cliente por placa cuando se hace clic en el botón de búsqueda
+            $('#btnBuscar').on('click', function () {
+                var placa = $('#placa').val();
+                if (placa) {
+                    fetch('@Url.Action("BuscarIdClientePorPlaca", "Inicio")?placa=' + placa, {
+                        method: 'GET',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        credentials: 'same-origin'
+                    })
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Red error: ' + response.statusText);
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        $('#IdCliente').val(data.idCliente || "Cliente no encontrado");
+                    })
+                    .catch(error => {
+                        console.error('Error al buscar el cliente:', error);
+                        $('#IdCliente').val("Error en la búsqueda");
+                    });
+                }
+            });
+        });
+    </script>
+</head>
+<body>
+    <section class="wrapper">
+        <div class="container">
+            <h1>@ViewBag.Title</h1>
+
+            @using (Html.BeginForm("RegistrarR", "Inicio", FormMethod.Post))
+            {
+                @Html.AntiForgeryToken()
+                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+                <div class="form-group">
+                    <label for="Placa">Placa</label>
+                    <div class="input-group">
+                        @Html.TextBoxFor(model => model.placa, new { @class = "form-control", required = "required", id = "placa" })
+                        <span class="input-group-btn">
+                            <button type="button" class="btn btn-info" id="btnBuscar">Buscar</button>
+                        </span>
+                    </div>
+                    @Html.ValidationMessageFor(model => model.placa, "", new { @class = "text-danger" })
+                </div>
+
+                <div class="form-group">
+                    <label for="IdCliente">ID del Cliente</label>
+                    @Html.TextBoxFor(model => model.IdCliente, new { @class = "form-control", @type = "number", required = "required", id = "IdCliente", @readonly = "readonly" })
+                    @Html.ValidationMessageFor(model => model.IdCliente, "", new { @class = "text-danger" })
+                </div>
+
+                <div class="form-group">
+                    <label for="NumeroDocumento">Mecanico</label>
+                    @Html.DropDownList("NumeroDocumento", new SelectList(ViewBag.Mecanicos as IEnumerable<SelectListItem>, "Value", "Text"), "Seleccione un mecánico", new { @class = "form-control" })
+                    @Html.ValidationMessageFor(model => model.NumeroDocumento, "", new { @class = "text-danger" })
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Descripcion)
+                    @Html.TextAreaFor(model => model.Descripcion, new { @class = "form-control", rows = 4 })
+                    @Html.ValidationMessageFor(model => model.Descripcion, "", new { @class = "text-danger" })
+                </div>
+
+                <div class="form-group">
+                    <label for="FechaIngreso">Fecha de Ingreso</label>
+                    @Html.TextBoxFor(model => model.FechaIngreso, new { @class = "form-control", @type = "date" })
+                    @Html.ValidationMessageFor(model => model.FechaIngreso, "", new { @class = "text-danger" })
+                </div>
+
+                <div class="form-group">
+                    <label for="FechaEntregaPrevista">Fecha de Entrega Prevista</label>
+                    @Html.TextBoxFor(model => model.FechaEntregaPrevista, new { @class = "form-control", @type = "date" })
+                    @Html.ValidationMessageFor(model => model.FechaEntregaPrevista, "", new { @class = "text-danger" })
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Estado)
+                    @Html.DropDownListFor(
+                        model => model.Estado,
+                        new SelectList(
+                            new List<SelectListItem>
+                            {
+                                new SelectListItem { Value = "", Text = "Seleccione una opción" },
+                                new SelectListItem { Value = "Pendiente", Text = "Pendiente" },
+                                new SelectListItem { Value = "En Progreso", Text = "En Progreso" },
+                            }, "Value", "Text"),
+                        new { @class = "form-control" }
+                    )
+                    @Html.ValidationMessageFor(model => model.Estado, "", new { @class = "text-danger" })
+                </div>
+
+
+                <div class="form-group mt-4">
+                    <input type="submit" value="Registrar" class="btn btn-primary" />
+                    <a href="@Url.Action("GestionarReparaciones", "Inicio")" class="btn btn-secondary">Cancelar</a>
+                </div>
+            }
+        </div>
+    </section>
+</body>
+</html>
+<style>
+    /* Estilos similares a los que usas en RegistrarMecanico */
+    .wrapper {
+        padding: 20px;
+        background-color: #f5f8fa;
+        min-height: 100vh;
+    }
+
+        .wrapper h1 {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #FA6C17;
+            margin-bottom: 20px;
+        }
+
+    .form-group {
+        margin-bottom: 15px;
+    }
+
+    .form-control {
+        border-radius: 0;
+        border: 1px solid #ced4da;
+        padding: 10px;
+        font-size: 1rem;
+        width: 100%;
+    }
+
+    .btn {
+        margin: 0 5px;
+        padding: 10px 20px;
+    }
+
+    .btn-primary {
+        background-color: #FA6C17;
+        border: none;
+        color: #fff;
+    }
+
+        .btn-primary:hover {
+            background-color: #e85910;
+        }
+
+    .btn-secondary {
+        background-color: #6c757d;
+        border: none;
+        color: #fff;
+    }
+
+        .btn-secondary:hover {
+            background-color: #5a6268;
+        }
+</style>

@@ -33,14 +33,15 @@
                         <div class="d-flex align-items-center">
                             <div>
                                 <h5 class="mb-1">@vehiculos.marca - @vehiculos.modelo</h5>
+                                <p class="mb-0"><strong>ID del Propietario:</strong> @vehiculos.IdCliente</p>
+                                <p class="mb-0"><strong>Nombre del Propietario:</strong> @vehiculos.Nombre</p>
                                 <p class="mb-0"><strong>Placa:</strong> @vehiculos.placa</p>
                                 <p class="mb-0"><strong>Modelo:</strong> @vehiculos.modelo</p>
                                 <p class="mb-0"><strong>Año:</strong> @vehiculos.año</p>
                             </div>
                         </div>
                         <div>
-                            <a href="@Url.Action("EditarV", "Inicio", new { placa = vehiculos.placa })" class="btn btn-warning me-2">Editar</a>
-                            <a href="@Url.Action("EliminarVehiculos", "Inicio", new { placa = vehiculos.placa })" class="btn btn-danger" onclick="return handleDelete(event, '@Url.Action("EliminarVehiculos", "Inicio", new { placa = vehiculos.placa })')">Eliminar</a>
+                            <a href="@Url.Action("EliminarR", "Inicio", new { placa = vehiculos.placa })" class="btn btn-danger" onclick="return handleDelete(event, '@Url.Action("EliminarVehiculos", "Inicio", new { placa = vehiculos.placa })')">Eliminar</a>
                         </div>
                     </div>
                 }

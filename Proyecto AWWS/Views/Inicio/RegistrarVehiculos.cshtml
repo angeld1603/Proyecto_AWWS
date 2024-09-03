@@ -16,26 +16,43 @@
 
             <div class="form-group">
                 <label for="Placa">Placa</label>
-                @Html.TextBoxFor(model => model.placa, new { @class = "form-control" })
+                @Html.TextBoxFor(model => model.placa, new { @class = "form-control", required = "required" })
                 @Html.ValidationMessageFor(model => model.placa, "", new { @class = "text-danger" })
             </div>
 
             <div class="form-group">
                 <label for="Marca">Marca</label>
-                @Html.TextBoxFor(model => model.marca, new { @class = "form-control" })
+                @Html.TextBoxFor(model => model.marca, new { @class = "form-control", required = "required" })
                 @Html.ValidationMessageFor(model => model.marca, "", new { @class = "text-danger" })
             </div>
 
             <div class="form-group">
                 <label for="Modelo">Modelo</label>
-                @Html.TextBoxFor(model => model.modelo, new { @class = "form-control" })
+                @Html.TextBoxFor(model => model.modelo, new { @class = "form-control", required = "required" })
                 @Html.ValidationMessageFor(model => model.modelo, "", new { @class = "text-danger" })
             </div>
 
             <div class="form-group">
                 <label for="Año">Año</label>
-                @Html.TextBoxFor(model => model.año, new { @class = "form-control" })
+                @Html.TextBoxFor(model => model.año, new { @class = "form-control", @type = "number", required = "required" })
                 @Html.ValidationMessageFor(model => model.año, "", new { @class = "text-danger" })
+            </div>
+
+            <div class="form-group">
+                <label for="IdCliente">ID del Propietario</label>
+                <div class="input-group">
+                    @Html.TextBoxFor(model => model.IdCliente, new { @class = "form-control", @type = "number", required = "required", id = "IdCliente" })
+                    <span class="input-group-btn">
+                        <button type="button" class="btn btn-info" onclick="buscarCliente()">Buscar</button>
+                    </span>
+                </div>
+                @Html.ValidationMessageFor(model => model.IdCliente, "", new { @class = "text-danger" })
+            </div>
+
+            <div class="form-group">
+                <label for="Nombre">Nombre del Propietario</label>
+                @Html.TextBoxFor(model => model.Nombre, new { @class = "form-control", required = "required", id = "Nombre", @readonly = "readonly" })
+                @Html.ValidationMessageFor(model => model.Nombre, "", new { @class = "text-danger" })
             </div>
 
             <div class="form-group mt-4">
@@ -98,3 +115,31 @@
             background-color: #5a6268;
         }
 </style>
+
+<script>
+    function buscarCliente() {
+        var idCliente = document.getElementById('IdCliente').value;
+        if (idCliente) {
+            fetch('@Url.Action("BuscarCliente", "Inicio")?idCliente=' + idCliente, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                credentials: 'same-origin'
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Red error: ' + response.statusText);
+                }
+                return response.json();
+            })
+            .then(data => {
+                document.getElementById('Nombre').value = data.nombre || "Cliente no encontrado";
+            })
+            .catch(error => {
+                console.error('Error al buscar el cliente:', error);
+                document.getElementById('Nombre').value = "Error en la búsqueda";
+            });
+        }
+    }
+</script>

@@ -38,12 +38,13 @@
                     <div class="fw-normal text-muted mb-2">
                         Ya te encuentras registrado? <a href="@Url.Action("Login", "Login")" class="text-primary fw-bold text-decoration-none">Iniciar sesión aquí</a>
                     </div>
+
                     <div class="form-floating mb-3">
                         <input type="number" class="form-control" id="floatingid" name="idCliente" placeholder="Número de identificación" required>
                         <label for="floatingid">Número de identificación</label>
                     </div>
                     <div class="form-floating mb-3">
-                        <input type="text" class="form-control" id="floatingnombre_completo" name="nombre" placeholder="Nombre Completo" required>
+                        <input type="text" class="form-control" id="floatingnombre_completo" name="nombre" placeholder="Nombre Completo" required pattern="[A-Za-zÀ-ÿ\s]+" title="Por favor, ingrese solo letras y espacios.">
                         <label for="floatingnombre_completo">Nombre Completo</label>
                     </div>
 
@@ -56,7 +57,21 @@
                         <input type="password" class="form-control" id="floatingcontraseña" name="contraseña" placeholder="Contraseña" required>
                         <label for="floatingcontraseña">Ingresar contraseña</label>
                     </div>
-                
+
+                    @if (TempData["ErrorMessage"] != null)
+                    {
+                        <div class="alert alert-danger">
+                            @TempData["ErrorMessage"]
+                        </div>
+                    }
+
+                    @if (TempData["SuccessMessage"] != null)
+                    {
+                        <div class="alert alert-success">
+                            @TempData["SuccessMessage"]
+                        </div>
+                    }
+
                     <button type="submit" class="submit_btn w-100 my-4" style="background-color: #FA6C17; border-radius:15px">Registrarse</button>
                 </form>
             </div>
@@ -71,6 +86,16 @@
 </body>
 </html>
 
+<script>
+    document.addEventListener('DOMContentLoaded', (event) => {
+        const nombreInput = document.getElementById('floatingnombre_completo');
+
+        nombreInput.addEventListener('input', () => {
+            // Remover caracteres no permitidos
+            nombreInput.value = nombreInput.value.replace(/[^A-Za-zÀ-ÿ\s]/g, '');
+        });
+    });
+</script>
 <style>
     /* Google Poppins Font CDN Link */
 

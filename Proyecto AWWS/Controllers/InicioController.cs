@@ -6,6 +6,7 @@ using System.Web;
 using System.Web.Mvc;
 using MongoDB.Driver;
 using CapaEntidad;
+using Microsoft.Ajax.Utilities;
 
 namespace Proyecto_AWWS.Controllers
 {
@@ -13,6 +14,8 @@ namespace Proyecto_AWWS.Controllers
     {
         private readonly IMongoCollection<Mecanicos> mecanicoCollection;
         private readonly IMongoCollection<Vehiculos> vehiculoCollection;
+        private readonly IMongoCollection<Reparacion> reparacionCollection;
+        private readonly IMongoCollection<Clientes> clientesCollection;
 
 
         public InicioController()
@@ -24,6 +27,10 @@ namespace Proyecto_AWWS.Controllers
             mecanicoCollection = database.GetCollection<Mecanicos>("Mecanicos");
 
             vehiculoCollection = database.GetCollection<Vehiculos>("Vehiculos");
+
+            reparacionCollection = database.GetCollection<Reparacion>("Reparacion");
+
+            clientesCollection = database.GetCollection<Clientes>("Clientes");
         }
 
         //Vistas
@@ -78,6 +85,7 @@ namespace Proyecto_AWWS.Controllers
                     mecanicoCollection.UpdateOne(filter, update);
                 }
             }
+
             return RedirectToAction("GestionarMecanicos");
         }
 
@@ -143,8 +151,83 @@ namespace Proyecto_AWWS.Controllers
 
         public ActionResult GestionarReparaciones()
         {
+            var reparacion = reparacionCollection.Find(r => true).ToList();
+            return View(reparacion);
+        }
+
+        public ActionResult RegistrarReparacion()
+        {
+            ViewBag.Clientes = new SelectList(clientesCollection.Find(c => true).ToList(), "IdCliente", "Nombre");
+            ViewBag.Vehiculos = new SelectList(vehiculoCollection.Find(v => true).ToList(), "placa", "placa");
+            ViewBag.Mecanicos = new SelectList(mecanicoCollection.Find(m => true).ToList(), "NumeroDocumento", "Nombre");
             return View();
         }
+
+        [HttpGet]
+        public JsonResult BuscarIdClientePorPlaca(string placa)
+        {
+            if (string.IsNullOrEmpty(placa))
+            {
+                return Json(new { idCliente = (string)null }, JsonRequestBehavior.AllowGet);
+            }
+
+            // Supongamos que tienes las colecciones de vehículos y clientes configuradas
+            var vehiculo = vehiculoCollection.Find(v => v.placa == placa).FirstOrDefault();
+            if (vehiculo != null)
+            {
+                var cliente = clientesCollection.Find(c => c.IdCliente == vehiculo.IdCliente).FirstOrDefault();
+                return Json(new { idCliente = cliente?.IdCliente.ToString() ?? "Cliente no encontrado" }, JsonRequestBehavior.AllowGet);
+            }
+            return Json(new { idCliente = "Cliente no encontrado" }, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult RegistrarR(Reparacion reparacion)
+        {
+            if (ModelState.IsValid)
+            {
+                // Verifica si el cliente existe
+                var cliente = clientesCollection.Find(c => c.IdCliente == reparacion.IdCliente).FirstOrDefault();
+                if (cliente == null)
+                {
+                    ModelState.AddModelError("", "Cliente no encontrado.");
+                    return View(reparacion);
+                }
+
+                // Verifica si el vehículo existe y pertenece al cliente
+                var vehiculo = vehiculoCollection.Find(v => v.placa == reparacion.placa && v.IdCliente == reparacion.IdCliente).FirstOrDefault();
+                if (vehiculo == null)
+                {
+                    ModelState.AddModelError("", "Vehículo no encontrado o no pertenece al cliente seleccionado.");
+                    return View(reparacion);
+                }
+                // Insertar el nuevo documento
+                reparacionCollection.InsertOne(reparacion);
+
+                return RedirectToAction("GestionarReparaciones");
+            }
+
+            // Si el modelo no es válido, recargar los datos de vista
+            ViewBag.Clientes = new SelectList(clientesCollection.Find(c => true).ToList(), "IdCliente", "Nombre", reparacion.IdCliente);
+            ViewBag.Vehiculos = new SelectList(vehiculoCollection.Find(v => v.IdCliente == reparacion.IdCliente).ToList(), "placa", "placa", reparacion.placa);
+            ViewBag.Mecanicos = new SelectList(mecanicoCollection.Find(m => true).ToList(), "NumeroDocumento", "Nombre", reparacion.NumeroDocumento);
+            return View(reparacion);
+        }
+
+
+        public JsonResult ObtenerClientes(string filtro)
+        {
+            var clientes = clientesCollection.Find(c => c.Nombre.Contains(filtro)).ToList();
+            return Json(clientes, JsonRequestBehavior.AllowGet);
+        }
+
+        public JsonResult ObtenerVehiculosPorCliente(int clienteId)
+        {
+            var vehiculos = vehiculoCollection.Find(v => v.IdCliente == clienteId).ToList();
+            return Json(vehiculos, JsonRequestBehavior.AllowGet);
+        }
+
 
         // Acción para mostrar el formulario de gestion de citas
         public ActionResult GestionarCitas()
@@ -239,6 +322,20 @@ namespace Proyecto_AWWS.Controllers
                 return RedirectToAction("GestionarVehiculos");
             }
             return View(vehiculos);
+        }
+
+        public JsonResult BuscarCliente(int idCliente)
+        {
+            // Ajusta el nombre de la colección y la búsqueda según tu implementación
+            var cliente = clientesCollection.Find(c => c.IdCliente == idCliente).FirstOrDefault();
+            if (cliente != null)
+            {
+                return Json(new { nombre = cliente.Nombre }, JsonRequestBehavior.AllowGet);
+            }
+            else
+            {
+                return Json(new { nombre = "Cliente no encontrado" }, JsonRequestBehavior.AllowGet);
+            }
         }
     }
 }

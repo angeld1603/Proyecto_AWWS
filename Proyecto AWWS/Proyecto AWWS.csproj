@@ -295,9 +295,9 @@
     <Content Include="Views\Inicio\Editar.cshtml" />
     <Content Include="Views\Inicio\Registrar.cshtml" />
     <Content Include="Views\Inicio\RegistrarVehiculos.cshtml" />
-    <Content Include="Views\Inicio\EditarV.cshtml" />
     <Content Include="Views\Mecanico\Inicio.cshtml" />
     <Content Include="Views\Mecanico\GestionarReparaciones.cshtml" />
+    <Content Include="Views\Inicio\RegistrarReparacion.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

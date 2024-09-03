@@ -82,6 +82,17 @@ namespace Proyecto_AWWS.Controllers
         [HttpPost]
         public async Task<ActionResult> Registrar(string idCliente, string nombre, string contraseña, string numeroTelefono, string direccion)
         {
+            // Verifica si el ID del cliente ya existe en la base de datos
+            var clienteExistente = await clientes.Find(c => c.IdCliente == Convert.ToInt32(idCliente)).FirstOrDefaultAsync();
+
+            if (clienteExistente != null)
+            {
+                // Si el cliente ya existe, guarda el mensaje de error en TempData
+                TempData["ErrorMessage"] = "El ID del cliente ya está registrado.";
+                return RedirectToAction("Registro", "Login"); // Redirige a la vista de registro
+            }
+
+            // Crea un nuevo cliente y lo inserta en la base de datos
             var nuevoCliente = new Clientes
             {
                 IdCliente = Convert.ToInt32(idCliente),
@@ -93,9 +104,10 @@ namespace Proyecto_AWWS.Controllers
 
             await clientes.InsertOneAsync(nuevoCliente);
 
-            // Redirigir al login o a otra página según sea necesario
-            return RedirectToAction("Login", "Login");
+            // Mensaje de éxito
+            return RedirectToAction("Login", "Login"); // Redirige al login
         }
+
 
         public ActionResult ReestablecerContraseña()
         {
@@ -116,13 +128,14 @@ namespace Proyecto_AWWS.Controllers
 
                 // Mensaje de éxito
                 TempData["SuccessMessage"] = "La contraseña ha sido restablecida exitosamente.";
-                return RedirectToAction("ReestablecerContraseña", "Login");
             }
             else
             {
                 // Mensaje de error
-                return RedirectToAction("ReestablecerContraseña", "Login");
+                TempData["ErrorMessage"] = "El ID ingresado es incorrecto.";
             }
+
+            return RedirectToAction("ReestablecerContraseña", "Login");
         }
     }
 }

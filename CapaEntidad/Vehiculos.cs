@@ -18,5 +18,7 @@ namespace CapaEntidad
         public string marca { get; set; }
         public string modelo { get; set; }
         public int año { get; set; }
+        public int IdCliente { get; set; } // Agregado para referencia al cliente
+        public string Nombre { get; set; } // Agregado para referencia al cliente
     }
 }

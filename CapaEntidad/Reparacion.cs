@@ -16,16 +16,14 @@ namespace CapaEntidad
 
         public string Descripcion { get; set; }
 
-        public DateTime FechaIngreso { get; set; }
+        public string FechaIngreso { get; set; }
 
-        public DateTime FechaEntregaPrevista { get; set; }
+        public string FechaEntregaPrevista { get; set; }
 
         public string Estado { get; set; }
 
-        public string VehiculoId { get; set; } // Para identificar el vehículo
-
-        public string MecanicoId { get; set; } // Para identificar al mecánico asignado
-
-        public List<string> Repuestos { get; set; } // Lista de repuestos asignados
+        public int IdCliente { get; set; }  // Relacionado con la clase Cliente para obtener el id del cliente
+        public string placa { get; set; }  // Relacionado con la clase Vehiculo para obtener la placa del vehiculo
+        public int NumeroDocumento { get; set; }  // Relacionado con la clase Mecanico para obtener el id del mecanico
     }
 }
