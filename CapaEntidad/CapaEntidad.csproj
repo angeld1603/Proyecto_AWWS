@@ -103,6 +103,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Asistencia.cs" />
     <Compile Include="Clientes.cs" />
     <Compile Include="Mecanicos.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

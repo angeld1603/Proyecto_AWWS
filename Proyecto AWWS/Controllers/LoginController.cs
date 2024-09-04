@@ -54,7 +54,7 @@ namespace Proyecto_AWWS.Controllers
 
             if (mecanico != null)
             {
-                Session["Nombre"] = mecanico.Nombre.Split()[0];
+                Session["NumeroDocumento"] = mecanico.NumeroDocumento;
                 //Session["Rol"] = "Mecanico"; // Opcional, para diferenciar el rol
                 return RedirectToAction("Inicio", "Mecanico");
             }

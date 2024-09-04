@@ -7,6 +7,7 @@ using System.Web.Mvc;
 using MongoDB.Driver;
 using CapaEntidad;
 using Microsoft.Ajax.Utilities;
+using QRCoder;
 
 namespace Proyecto_AWWS.Controllers
 {
@@ -341,6 +342,22 @@ namespace Proyecto_AWWS.Controllers
             {
                 return Json(new { nombre = "Cliente no encontrado" }, JsonRequestBehavior.AllowGet);
             }
+        }
+
+        public ActionResult AsistenciaMecanico()
+        {
+            return View();
+        }
+
+        public ActionResult Generar_QR()
+        {
+            string qrContent = "https://10.180.145.194:45455/Mecanico/RegistrarAsistencia";
+            QRCodeGenerator qrGenerator = new QRCodeGenerator();
+            QRCodeData qrCodeData = qrGenerator.CreateQrCode(qrContent, QRCodeGenerator.ECCLevel.Q);
+            BitmapByteQRCode qrCode = new BitmapByteQRCode(qrCodeData);
+            byte[] qrCodeImage = qrCode.GetGraphic(10);
+
+            return File(qrCodeImage, "image/png");
         }
     }
 }
