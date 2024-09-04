@@ -243,8 +243,13 @@ namespace Proyecto_AWWS.Controllers
             if (ModelState.IsValid)
             {
                 mecanicoCollection.InsertOne(mecanicos);
-                return RedirectToAction("GestionarMecanicos");
+
+                // Envía la bandera a la vista para mostrar el mensaje
+                ViewBag.RegistroExitoso = true;
+
+                return View(mecanicos); // Mantiene al usuario en la misma vista
             }
+
             return View(mecanicos);
         }
 

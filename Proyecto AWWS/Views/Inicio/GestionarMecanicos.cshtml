@@ -40,18 +40,17 @@
                                             <h5 class="card-title">@mecanico.Nombre</h5>
                                             <p class="card-text"><strong>Número de Documento:</strong> @mecanico.NumeroDocumento</p>
                                             <p class="card-text"><strong>Especialidad:</strong> @mecanico.Especialidad</p>
-                                            <div class="mt-3">
+                                            <div class="button-group d-flex justify-content-between mt-3">
                                                 <a href="@Url.Action("Editar", "Inicio", new { id = mecanico.NumeroDocumento })" class="btn btn-warning">Editar</a>
                                                 <a href="@Url.Action("Eliminar", "Inicio", new { id = mecanico.NumeroDocumento })" class="btn btn-danger" onclick="return handleDelete(event, '@Url.Action("Eliminar", "Inicio", new { id = mecanico.NumeroDocumento })')">Eliminar</a>
+                                                <a href="#" class="btn btn-cargar-foto" data-bs-toggle="modal" data-bs-target="#modalCargarFoto" data-id="@mecanico.NumeroDocumento">
+                                                    <span class="material-icons">add_circle</span>
+                                                    <span>Cargar foto</span>
+                                                </a>
                                             </div>
                                         </div>
                                         <div class="ms-3 text-center mecanico-img-container">
-                                            <img src="@mecanico.ImagenUrl" alt="@mecanico.Nombre" class="img-fluid" style="width: 80px; height: 80px; object-fit: cover;">
-                                            <!-- Botón para abrir el formulario de carga de imagen -->
-                                            <a href="#" class="btn btn-cargar-foto mt-2 small-btn" data-bs-toggle="modal" data-bs-target="#modalCargarFoto" data-id="@mecanico.NumeroDocumento">
-                                                <span class="material-icons">add_circle</span>
-                                                <span>Cargar foto</span>
-                                            </a>
+                                            <img src="@mecanico.ImagenUrl" alt="@mecanico.Nombre" class="img-fluid" style="width: 90px; height: 90px; object-fit: cover;">
                                         </div>
                                     </div>
                                 </div>
@@ -157,6 +156,26 @@
         font-family: var(--primary-font-family);
     }
 
+    .button-group .btn {
+        flex: 1;
+        margin-right: 5px;
+    }
+
+        .button-group .btn:last-child {
+            margin-right: 0;
+        }
+
+    .mecanico-card .btn {
+        width: 100%; /* Hace que todos los botones tengan el mismo ancho */
+        text-align: center;
+        white-space: nowrap; /* Evita que el texto dentro de los botones se divida en varias líneas */
+    }
+
+    .mecanico-card .btn-cargar-foto {
+        flex: 1;
+        margin-top: 0; /* Elimina el margen superior adicional */
+    }
+
     /* Main CSS */
     .wrapper {
         padding: 20px;
@@ -243,7 +262,6 @@
         transition: all 0.3s ease-in-out;
         text-align: center;
         font-size: 14px; /* Ajusta el tamaño del texto */
-        margin-top: 10px; /* Ajusta el espacio entre la imagen y el botón */
         width: 130px; /* Ajusta el ancho del botón */
         margin-left: 0; /* Asegúrate de que el botón no esté pegado al borde */
     }
