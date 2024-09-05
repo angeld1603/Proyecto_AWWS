@@ -53,7 +53,7 @@ namespace Proyecto_AWWS.Controllers
             }
 
             // Obtener el ID del mecánico desde la sesión
-            int numeroDocumento = Convert.ToInt32(Session["numeroDocumento"]);
+            int numeroDocumento = Convert.ToInt32(Session["NumeroDocumento"]);
 
             // Obtener la información del mecánico desde la colección
             var filtroMecanico = Builders<Mecanicos>.Filter.Eq(m => m.NumeroDocumento, numeroDocumento);
@@ -66,11 +66,7 @@ namespace Proyecto_AWWS.Controllers
 
             // Obtener la zona horaria de Colombia
             TimeZoneInfo colombiaTimeZone = TimeZoneInfo.FindSystemTimeZoneById("SA Pacific Standard Time");
-
-            // Obtener la fecha y hora actual en Colombia
             DateTime fechaActualColombia = TimeZoneInfo.ConvertTime(DateTime.Now, colombiaTimeZone);
-
-            // Convertir a UTC para almacenar en MongoDB
             DateTime fechaActualUTC = TimeZoneInfo.ConvertTimeToUtc(fechaActualColombia, colombiaTimeZone);
 
             // Verificar si ya existe un registro de entrada sin salida para este mecánico
@@ -94,23 +90,23 @@ namespace Proyecto_AWWS.Controllers
 
                 asistenciaCollection.InsertOne(nuevaAsistencia);
 
-                // Actualizar estado del mecánico a "activo"
+                // Actualizar el estado del mecánico a Activo
                 var updateMecanico = Builders<Mecanicos>.Update.Set(m => m.Estado, true);
                 mecanicosCollection.UpdateOne(filtroMecanico, updateMecanico);
 
-                return Json(new { success = true, message = "Entrada registrada correctamente. Estado del mecánico actualizado a activo.", hora = fechaActualColombia.Hour, minuto = fechaActualColombia.Minute, esPM = fechaActualColombia.Hour >= 12 }, JsonRequestBehavior.AllowGet);
+                return Json(new { success = true, message = "Entrada registrada correctamente", hora = fechaActualColombia.Hour, minuto = fechaActualColombia.Minute, esPM = fechaActualColombia.Hour >= 12 }, JsonRequestBehavior.AllowGet);
             }
             else
             {
                 // Actualizar el registro existente con la fecha de salida
-                var update = Builders<Asistencia>.Update.Set(a => a.FechaSalida, fechaActualUTC);
-                asistenciaCollection.UpdateOne(filtroAsistencia, update);
+                var updateAsistencia = Builders<Asistencia>.Update.Set(a => a.FechaSalida, fechaActualUTC);
+                asistenciaCollection.UpdateOne(filtroAsistencia, updateAsistencia);
 
-                // Actualizar estado del mecánico a "no activo"
+                // Actualizar el estado del mecánico a No Activo
                 var updateMecanico = Builders<Mecanicos>.Update.Set(m => m.Estado, false);
                 mecanicosCollection.UpdateOne(filtroMecanico, updateMecanico);
 
-                return Json(new { success = true, message = "Salida registrada correctamente. Estado del mecánico actualizado a no activo.", hora = fechaActualColombia.Hour, minuto = fechaActualColombia.Minute, esPM = fechaActualColombia.Hour >= 12 }, JsonRequestBehavior.AllowGet);
+                return Json(new { success = true, message = "Salida registrada correctamente", hora = fechaActualColombia.Hour, minuto = fechaActualColombia.Minute, esPM = fechaActualColombia.Hour >= 12 }, JsonRequestBehavior.AllowGet);
             }
         }
     }

@@ -50,15 +50,6 @@ namespace Proyecto_AWWS.Controllers
         // Acción para mostrar el formulario de registro de mecanicos
         public ActionResult Registrar()
         {
-            // Preparar la lista desplegable
-            var listaEstados = new List<SelectListItem>
-            {
-                new SelectListItem { Text = "Activo", Value = "true" },
-                new SelectListItem { Text = "No Activo", Value = "false" }
-            };
-
-            ViewBag.Estados = listaEstados; // Pasar la lista de SelectListItem directamente a ViewBag
-
             return View();
         }
 
@@ -167,9 +158,16 @@ namespace Proyecto_AWWS.Controllers
 
         public ActionResult RegistrarReparacion()
         {
+            // Filtra mecánicos activos
+            var mecanicosActivos = mecanicoCollection
+                .Find(m => m.Estado == true) // Asegúrate de que el campo Estado es booleano
+                .ToList();
+
+            // Prepara la lista para el Dropdown de mecánicos activos
+            ViewBag.Mecanicos = new SelectList(mecanicosActivos, "NumeroDocumento", "Nombre");
             ViewBag.Clientes = new SelectList(clientesCollection.Find(c => true).ToList(), "IdCliente", "Nombre");
             ViewBag.Vehiculos = new SelectList(vehiculoCollection.Find(v => true).ToList(), "placa", "placa");
-            ViewBag.Mecanicos = new SelectList(mecanicoCollection.Find(m => true).ToList(), "NumeroDocumento", "Nombre");
+
             return View();
         }
 
@@ -212,6 +210,15 @@ namespace Proyecto_AWWS.Controllers
                     ModelState.AddModelError("", "Vehículo no encontrado o no pertenece al cliente seleccionado.");
                     return View(reparacion);
                 }
+
+                // Verifica si el mecánico está activo
+                var mecanico = mecanicoCollection.Find(m => m.NumeroDocumento == reparacion.NumeroDocumento && m.Estado).FirstOrDefault();
+                if (mecanico == null)
+                {
+                    ModelState.AddModelError("", "Mecánico no activo o no encontrado.");
+                    return View(reparacion);
+                }
+
                 // Insertar el nuevo documento
                 reparacionCollection.InsertOne(reparacion);
 
@@ -221,7 +228,8 @@ namespace Proyecto_AWWS.Controllers
             // Si el modelo no es válido, recargar los datos de vista
             ViewBag.Clientes = new SelectList(clientesCollection.Find(c => true).ToList(), "IdCliente", "Nombre", reparacion.IdCliente);
             ViewBag.Vehiculos = new SelectList(vehiculoCollection.Find(v => v.IdCliente == reparacion.IdCliente).ToList(), "placa", "placa", reparacion.placa);
-            ViewBag.Mecanicos = new SelectList(mecanicoCollection.Find(m => true).ToList(), "NumeroDocumento", "Nombre", reparacion.NumeroDocumento);
+            ViewBag.Mecanicos = new SelectList(mecanicoCollection.Find(m => m.Estado).ToList(), "NumeroDocumento", "Nombre", reparacion.NumeroDocumento);
+
             return View(reparacion);
         }
 
@@ -245,22 +253,20 @@ namespace Proyecto_AWWS.Controllers
             return View();
         }
 
-        // Acción para manejar el registro del mecánico
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Registrar(Mecanicos mecanicos)
+        public ActionResult Registrar(Mecanicos mecanico)
         {
             if (ModelState.IsValid)
             {
-                mecanicoCollection.InsertOne(mecanicos);
+                // Agregar el nuevo mecánico a la base de datos sin establecer el estado
+                mecanico.Estado = false; // Asignar un valor predeterminado si es necesario
+                mecanicoCollection.InsertOne(mecanico);
 
-                // Envía la bandera a la vista para mostrar el mensaje
+                // Redirigir o mostrar un mensaje de éxito
                 ViewBag.RegistroExitoso = true;
-
-                return View(mecanicos); // Mantiene al usuario en la misma vista
+                return RedirectToAction("GestionarMecanicos");
             }
-
-            return View(mecanicos);
+            return View(mecanico);
         }
 
         // Acción para manejar la edición del mecánico
