@@ -21,6 +21,13 @@
     <section class="wrapper">
         <div class="container">
             <div class="text-end mb-3">
+                <a href="@Url.Action("AsistenciaMecanico", "Inicio")" class="btn btn-register">
+                    <span class="material-icons">add_circle</span>
+                    <span>Generar QR de Asistencia</span>
+                </a>
+            </div>
+
+            <div class="text-end mb-3">
                 <a href="@Url.Action("Registrar", "Inicio")" class="btn btn-register">
                     <span class="material-icons">add_circle</span>
                     <span>Registrar Mecánico</span>
@@ -39,7 +46,7 @@
                                         <div class="flex-grow-1">
                                             <h5 class="card-title">@mecanico.Nombre</h5>
                                             <p class="card-text"><strong>Número de Documento:</strong> @mecanico.NumeroDocumento</p>
-                                            <p class="card-text"><strong>Especialidad:</strong> @mecanico.Especialidad</p>
+                                            <p class="card-text"><strong>Estado:</strong> @mecanico.Estado</p>
                                             <div class="button-group d-flex justify-content-between mt-3">
                                                 <a href="@Url.Action("Editar", "Inicio", new { id = mecanico.NumeroDocumento })" class="btn btn-warning">Editar</a>
                                                 <a href="@Url.Action("Eliminar", "Inicio", new { id = mecanico.NumeroDocumento })" class="btn btn-danger" onclick="return handleDelete(event, '@Url.Action("Eliminar", "Inicio", new { id = mecanico.NumeroDocumento })')">Eliminar</a>

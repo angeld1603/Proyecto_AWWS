@@ -18,7 +18,8 @@ namespace CapaEntidad
         public Int32 NumeroDocumento { get; set; }
         public string Nombre { get; set; }
         public string Contraseña { get; set; }
-        public string Especialidad { get; set; }
+        public bool Estado { get; set; } // true = activo, false = no activo
+
         public string ImagenUrl { get; set; }  // Nueva propiedad
     }
 }

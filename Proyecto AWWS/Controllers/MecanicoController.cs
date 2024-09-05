@@ -94,7 +94,11 @@ namespace Proyecto_AWWS.Controllers
 
                 asistenciaCollection.InsertOne(nuevaAsistencia);
 
-                return Json(new { success = true, message = "Entrada registrada correctamente", hora = fechaActualColombia.Hour, minuto = fechaActualColombia.Minute, esPM = fechaActualColombia.Hour >= 12 }, JsonRequestBehavior.AllowGet);
+                // Actualizar estado del mecánico a "activo"
+                var updateMecanico = Builders<Mecanicos>.Update.Set(m => m.Estado, true);
+                mecanicosCollection.UpdateOne(filtroMecanico, updateMecanico);
+
+                return Json(new { success = true, message = "Entrada registrada correctamente. Estado del mecánico actualizado a activo.", hora = fechaActualColombia.Hour, minuto = fechaActualColombia.Minute, esPM = fechaActualColombia.Hour >= 12 }, JsonRequestBehavior.AllowGet);
             }
             else
             {
@@ -102,7 +106,11 @@ namespace Proyecto_AWWS.Controllers
                 var update = Builders<Asistencia>.Update.Set(a => a.FechaSalida, fechaActualUTC);
                 asistenciaCollection.UpdateOne(filtroAsistencia, update);
 
-                return Json(new { success = true, message = "Salida registrada correctamente", hora = fechaActualColombia.Hour, minuto = fechaActualColombia.Minute, esPM = fechaActualColombia.Hour >= 12 }, JsonRequestBehavior.AllowGet);
+                // Actualizar estado del mecánico a "no activo"
+                var updateMecanico = Builders<Mecanicos>.Update.Set(m => m.Estado, false);
+                mecanicosCollection.UpdateOne(filtroMecanico, updateMecanico);
+
+                return Json(new { success = true, message = "Salida registrada correctamente. Estado del mecánico actualizado a no activo.", hora = fechaActualColombia.Hour, minuto = fechaActualColombia.Minute, esPM = fechaActualColombia.Hour >= 12 }, JsonRequestBehavior.AllowGet);
             }
         }
     }

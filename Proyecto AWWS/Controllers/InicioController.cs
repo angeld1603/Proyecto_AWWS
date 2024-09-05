@@ -50,6 +50,15 @@ namespace Proyecto_AWWS.Controllers
         // Acción para mostrar el formulario de registro de mecanicos
         public ActionResult Registrar()
         {
+            // Preparar la lista desplegable
+            var listaEstados = new List<SelectListItem>
+            {
+                new SelectListItem { Text = "Activo", Value = "true" },
+                new SelectListItem { Text = "No Activo", Value = "false" }
+            };
+
+            ViewBag.Estados = listaEstados; // Pasar la lista de SelectListItem directamente a ViewBag
+
             return View();
         }
 
@@ -264,7 +273,7 @@ namespace Proyecto_AWWS.Controllers
                 var update = Builders<Mecanicos>.Update
                     .Set(m => m.Nombre, mecanico.Nombre)
                     .Set(m => m.Contraseña, mecanico.Contraseña)
-                    .Set(m => m.Especialidad, mecanico.Especialidad)
+                    .Set(m => m.Estado, mecanico.Estado)
                     .Set(m => m.Contraseña, mecanico.Contraseña);
 
                 var result = mecanicoCollection.UpdateOne(filter, update);

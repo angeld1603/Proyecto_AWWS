@@ -31,15 +31,15 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="Número de documento">Número de documento</label>
+                    @Html.Label("Número de documento")
                     @Html.TextBoxFor(model => model.NumeroDocumento, new { @class = "form-control", @type = "number", required = "required" })
                     @Html.ValidationMessageFor(model => model.NumeroDocumento, "", new { @class = "text-danger" })
                 </div>
 
                 <div class="form-group">
-                    @Html.LabelFor(model => model.Especialidad)
-                    @Html.TextBoxFor(model => model.Especialidad, new { @class = "form-control", required = "required", @id = "Especialidad" })
-                    @Html.ValidationMessageFor(model => model.Especialidad, "", new { @class = "text-danger" })
+                    @Html.LabelFor(model => model.Estado)
+                    @Html.DropDownListFor(model => model.Estado, (IEnumerable<SelectListItem>)ViewBag.Estados, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(model => model.Estado, "", new { @class = "text-danger" })
                 </div>
 
                 <div class="form-group">
@@ -60,12 +60,11 @@
         <footer>AWWS</footer>
     </div>
 
-    <!-- Incluye el script de jQuery -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
         $(document).ready(function () {
-            // Permitir solo letras y espacios
-            $("#Nombre, #Especialidad").on("input", function () {
+            // Permitir solo letras y espacios en el campo Nombre
+            $("#Nombre").on("input", function () {
                 this.value = this.value.replace(/[^a-zA-Z\s]/g, '');
             });
 

@@ -13,8 +13,6 @@ namespace CapaEntidad
         [BsonId]
         [BsonRepresentation(BsonType.ObjectId)]
         public string Id { get; set; }
-
-        public int idAsistencia { get; set; }
         public int NumeroDocumento { get; set; }
         public string Nombre { get; set; }
         public DateTime FechaEntrada { get; set; }
