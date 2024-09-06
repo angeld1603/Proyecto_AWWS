@@ -17,43 +17,40 @@
 <body>
     <section class="wrapper">
         <div class="container">
-            <h1>@ViewBag.Title</h1>
+            <div class="content-box">
+                <h1>@ViewBag.Title</h1>
 
-            @using (Html.BeginForm("Registrar", "Inicio", FormMethod.Post))
-            {
-                @Html.AntiForgeryToken()
-                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                @using (Html.BeginForm("Registrar", "Inicio", FormMethod.Post))
+                {
+                    @Html.AntiForgeryToken()
+                    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
 
-                <div class="form-group">
-                    @Html.LabelFor(model => model.Nombre)
-                    @Html.TextBoxFor(model => model.Nombre, new { @class = "form-control", required = "required", @id = "Nombre" })
-                    @Html.ValidationMessageFor(model => model.Nombre, "", new { @class = "text-danger" })
-                </div>
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.Nombre)
+                        @Html.TextBoxFor(model => model.Nombre, new { @class = "form-control", required = "required", @id = "Nombre" })
+                        @Html.ValidationMessageFor(model => model.Nombre, "", new { @class = "text-danger" })
+                    </div>
 
-                <div class="form-group">
-                    @Html.Label("Número de documento")
-                    @Html.TextBoxFor(model => model.NumeroDocumento, new { @class = "form-control", @type = "number", required = "required" })
-                    @Html.ValidationMessageFor(model => model.NumeroDocumento, "", new { @class = "text-danger" })
-                </div>
+                    <div class="form-group">
+                        @Html.Label("Número de documento")
+                        @Html.TextBoxFor(model => model.NumeroDocumento, new { @class = "form-control", @type = "number", required = "required" })
+                        @Html.ValidationMessageFor(model => model.NumeroDocumento, "", new { @class = "text-danger" })
+                    </div>
 
-                <div class="form-group">
-                    @Html.LabelFor(model => model.Contraseña)
-                    @Html.PasswordFor(model => model.Contraseña, new { @class = "form-control", required = "required" })
-                    @Html.ValidationMessageFor(model => model.Contraseña, "", new { @class = "text-danger" })
-                </div>
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.Contraseña)
+                        @Html.PasswordFor(model => model.Contraseña, new { @class = "form-control", required = "required" })
+                        @Html.ValidationMessageFor(model => model.Contraseña, "", new { @class = "text-danger" })
+                    </div>
 
-
-                <div class="form-group mt-4">
-                    <input type="submit" value="Registrar" class="btn btn-primary" />
-                    <a href="@Url.Action("GestionarMecanicos", "Inicio")" class="btn btn-secondary">Cancelar</a>
-                </div>
-            }
+                    <div class="form-group mt-4">
+                        <input type="submit" value="Guardar" class="btn btn-primary" />
+                        <a href="@Url.Action("GestionarMecanicos", "Inicio")" class="btn btn-secondary">Cancelar</a>
+                    </div>
+                }
+            </div>
         </div>
     </section>
-
-    <div class="container-fluid text-center mt-5 fixed-bottom">
-        <footer>AWWS</footer>
-    </div>
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
@@ -92,21 +89,24 @@
             overflow: hidden;
         }
 
-            .wrapper h1 {
+        .content-box {
+            background-color: #fff;
+            padding: 30px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            max-width: 100%; /* Deja que tome todo el ancho disponible */
+            margin-bottom: 20px; /* Un margen para separarlo del footer */
+        }
+
+            .content-box h1 {
                 font-size: 2rem;
                 font-weight: bold;
-                color: #FA6C17;
+                color: #31bc71;
                 margin-bottom: 20px;
             }
 
         .form-group {
             margin-bottom: 15px;
-        }
-
-        .form-label {
-            display: block;
-            font-weight: bold;
-            margin-bottom: 0.5rem;
         }
 
         .form-control {
@@ -123,13 +123,13 @@
         }
 
         .btn-primary {
-            background-color: #FA6C17;
+            background-color: #31bc71;
             border: none;
             color: #fff;
         }
 
             .btn-primary:hover {
-                background-color: #e85910;
+                background-color: #28a745;
             }
 
         .btn-secondary {
@@ -145,12 +145,6 @@
         .fixed-bottom {
             background-color: #D0D1D5;
             padding: 1rem;
-        }
-
-        footer {
-            margin: 0;
-            padding: 10px 0;
-            color: #333;
         }
     </style>
 </body>

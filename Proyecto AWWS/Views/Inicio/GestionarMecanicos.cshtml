@@ -50,10 +50,10 @@
                                             </div>
                                         </div>
                                         <div class="ms-3 text-center mecanico-img-container d-flex flex-column align-items-center">
-                                            <img src="@mecanico.ImagenUrl" alt="@mecanico.Nombre" class="img-fluid mb-2" style="max-width: 100%; height: auto;">
+                                            <img src="@mecanico.ImagenUrl" alt="@mecanico.Nombre" class="img-fluid mb-2">
                                             <a href="#" class="btn btn-cargar-foto mt-2" data-bs-toggle="modal" data-bs-target="#modalCargarFoto" data-id="@mecanico.NumeroDocumento">
                                                 <span class="material-icons">add_circle</span>
-                                                <span>Cargar foto</span>
+                                                <span>Foto</span>
                                             </a>
                                         </div>
                                     </div>
@@ -75,9 +75,7 @@
                         <div class="modal-content">
                             <div class="modal-header">
                                 <h5 class="modal-title" id="modalCargarFotoLabel">Cargar Foto</h5>
-                                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
-                                    <span aria-hidden="true">&times;</span>
-                                </button>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                             </div>
                             <div class="modal-body">
                                 @using (Html.BeginForm("SubirFoto", "Inicio", FormMethod.Post, new { enctype = "multipart/form-data" }))
@@ -86,13 +84,12 @@
                                     <input type="hidden" id="modalMecanicoId" name="numeroDocumento" />
                                     <div class="form-group">
                                         <label for="archivo">Seleccionar foto:</label>
-                                        <input type="file" name="archivo" id="archivo" />
+                                        <input type="file" name="archivo" id="archivo" class="form-control" />
                                     </div>
                                     <br />
                                     <div class="d-flex justify-content-center align-items-center">
                                         <button type="submit" class="btn btn-primary">Subir</button>
                                     </div>
-
                                 }
                             </div>
                         </div>
@@ -121,7 +118,7 @@
                 icon: 'warning',
                 showCancelButton: true,
                 confirmButtonColor: '#d33',
-                cancelButtonColor: '#ffc107',
+                cancelButtonColor: 'secondary',
                 confirmButtonText: 'Sí, eliminar',
                 cancelButtonText: 'Cancelar'
             }).then((result) => {
@@ -178,12 +175,12 @@
         padding: 10px; /* Controla el espaciado interior */
     }
 
-        .mecanico-card .card-body {
-            display: flex;
-            flex-direction: row;
-            align-items: center;
-            padding: 15px;
-        }
+    .mecanico-card .card-body {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        padding: 15px;
+    }
 
     .mecanico-img-container {
         width: 100px;
@@ -193,11 +190,11 @@
         justify-content: center;
     }
 
-        .mecanico-img-container img {
-            width: 80px;
-            height: 80px;
-            object-fit: cover;
-        }
+    .mecanico-img-container img {
+        width: 80px;
+        height: 80px;
+        object-fit: cover;
+    }
 
     .btn {
         margin: 0 5px;
@@ -214,19 +211,19 @@
         color: #fff;
     }
 
-        .btn-asistencia .material-icons {
-            vertical-align: middle;
-            font-size: 24px;
-        }
+    .btn-asistencia .material-icons {
+        vertical-align: middle;
+        font-size: 24px;
+    }
 
-        .btn-asistencia span {
-            vertical-align: middle;
-            margin-left: 10px;
-        }
+    .btn-asistencia span {
+        vertical-align: middle;
+        margin-left: 10px;
+    }
 
-        .btn-asistencia:hover {
-            background-color: #5a6268;
-        }
+    .btn-asistencia:hover {
+        background-color: #5a6268;
+    }
 
     .btn-register {
         background-color: #31bc71;
@@ -238,77 +235,90 @@
         color: #fff;
     }
 
-        .btn-register .material-icons {
-            vertical-align: middle;
-            font-size: 24px;
-        }
+    .btn-register .material-icons {
+        vertical-align: middle;
+        font-size: 24px;
+    }
 
-        .btn-register span {
-            vertical-align: middle;
-            margin-left: 10px;
-        }
+    .btn-register span {
+        vertical-align: middle;
+        margin-left: 10px;
+    }
 
-        .btn-register:hover {
-            background-color: #28a745;
-        }
+    .btn-register:hover {
+        background-color: #28a745;
+    }
 
     .btn-cargar-foto {
         background-color: #002D3C;
-        padding: 4px 8px;
-        color: #fff;
-        font-weight: bold;
-        text-decoration: none;
-        text-align: center;
+        color: #ffffff;
+        border: none;
+        border-radius: 25px;
+        font-size: 0.875rem;
+        padding: 10px 20px;
+        display: flex;
+        align-items: center;
         font-size: 14px;
-        width: 130px;
     }
 
-        .btn-cargar-foto .material-icons {
-            vertical-align: middle;
-            font-size: 18px;
+    .btn-cargar-foto .material-icons {
+        margin-right: 5px;
+    }
+
+    .btn-cargar-foto:hover {
+        background-color: #001E29;
+    }
+
+    .btn-warning {
+        background-color: #31bc71;
+        border: none;
+        color: white;
+    }
+
+        .btn-warning:hover {
+            background-color: #28a745;
+            color: white;
         }
 
     .modal-content {
-        border-radius: 8px;
-        padding: 20px;
-        background-color: #fff;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    }
-
-    .modal-header {
-        border-bottom: 1px solid #dee2e6;
-    }
-
-    .modal-title {
-        font-size: 1.25rem;
-        font-weight: bold;
-    }
-
-    .btn-close {
-        background: transparent;
-        border: none;
-        font-size: 1.5rem;
-    }
-
-    .modal-body {
         padding: 15px;
+        border-radius: 10px;
     }
 
-    .form-control {
-        border-radius: 4px;
-        border: 1px solid #ced4da;
-    }
-
-    .btn-primary {
-        background-color: #31bc71;
-        border: none;
-        border-radius: 4px;
-        padding: 10px 15px;
-        font-size: 1rem;
-        cursor: pointer;
-    }
-
-        .btn-primary:hover {
-            background-color: #308456;
+    @@media (max-width: 768px) {
+        .mecanico-img-container {
+            width: 80px;
         }
+
+        .btn {
+            font-size: 0.9rem;
+            padding: 6px 12px;
+        }
+
+        .btn-asistencia, .btn-register {
+            width: 100%; /* Botones a pantalla completa en móviles */
+            text-align: center;
+        }
+    }
+
+    @@media (max-width: 576px) {
+        .mecanico-card {
+            flex-direction: column; /* En pantallas pequeñas, organiza la tarjeta en una sola columna */
+        }
+
+        .mecanico-img-container {
+            margin-bottom: 10px;
+            width: 100px;
+            height: auto;
+        }
+
+        .card-body {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .modal-backdrop {
+            background-color: rgba(0, 0, 0, 0); /* Cambia la opacidad a 0 */
+        }
+    }
 </style>

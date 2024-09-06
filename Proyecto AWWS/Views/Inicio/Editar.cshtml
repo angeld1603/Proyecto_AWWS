@@ -16,49 +16,60 @@
 <body>
     <section class="wrapper">
         <div class="container">
-            <h1>Editar Mecánico</h1>
-            @using (Html.BeginForm("Editar", "Inicio", FormMethod.Post))
-            {
-                @Html.AntiForgeryToken()
-                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+            <div class="content-box">
+                <h1>Editar Mecánico</h1>
+                @using (Html.BeginForm("Editar", "Inicio", FormMethod.Post))
+                {
+                    @Html.AntiForgeryToken()
+                    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
 
-                <div class="form-group">
-                    <label for="Número de documento">Número de documento</label>
-                    @Html.EditorFor(m => m.NumeroDocumento, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly"} })
-                    @Html.ValidationMessageFor(m => m.NumeroDocumento, "", new { @class = "text-danger" })
-                </div>
+                    <div class="form-group">
+                        <label for="Número de documento">Número de documento</label>
+                        @Html.EditorFor(m => m.NumeroDocumento, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+                        @Html.ValidationMessageFor(m => m.NumeroDocumento, "", new { @class = "text-danger" })
+                    </div>
 
-                <div class="form-group">
-                    @Html.LabelFor(m => m.Nombre)
-                    @Html.EditorFor(m => m.Nombre, new { htmlAttributes = new { @class = "form-control" } })
-                    @Html.ValidationMessageFor(m => m.Nombre, "", new { @class = "text-danger" })
-                </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.Nombre)
+                        @Html.EditorFor(m => m.Nombre, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(m => m.Nombre, "", new { @class = "text-danger" })
+                    </div>
 
-                <div class="form-group">
-                    @Html.LabelFor(m => m.Contraseña)
-                    @Html.EditorFor(m => m.Contraseña, new { htmlAttributes = new { @class = "form-control", @type = "password" } })
-                    @Html.ValidationMessageFor(m => m.Contraseña, "", new { @class = "text-danger" })
-                </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.Contraseña)
+                        @Html.EditorFor(m => m.Contraseña, new { htmlAttributes = new { @class = "form-control", @type = "password" } })
+                        @Html.ValidationMessageFor(m => m.Contraseña, "", new { @class = "text-danger" })
+                    </div>
 
-                <div class="form-group mt-4">
-                    <input type="submit" value="Guardar" class="btn btn-primary" />
-                    <a href="@Url.Action("GestionarMecanicos", "Inicio")" class="btn btn-secondary">Cancelar</a>
-                </div>
-            }
+                    <div class="form-group mt-4">
+                        <input type="submit" value="Guardar" class="btn btn-primary" />
+                        <a href="@Url.Action("GestionarMecanicos", "Inicio")" class="btn btn-secondary">Cancelar</a>
+                    </div>
+                }
+            </div>
         </div>
     </section>
 </body>
 </html>
 
 <style>
-    /* Same styles from the "Gestionar Mecánicos" view */
+    /* Misma clase wrapper usada en otras vistas */
     .wrapper {
         padding: 20px;
         background-color: #f5f8fa;
         min-height: 100vh;
     }
 
-        .wrapper h1 {
+    .content-box {
+        background-color: #fff;
+        padding: 30px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        border-radius: 8px;
+        max-width: 100%; /* Deja que tome todo el ancho disponible */
+        margin-bottom: 20px; /* Un margen para separarlo del footer */
+    }
+
+        .content-box h1 {
             font-size: 2rem;
             font-weight: bold;
             color: #31bc71;
