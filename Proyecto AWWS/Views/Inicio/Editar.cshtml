@@ -35,12 +35,6 @@
                 </div>
 
                 <div class="form-group">
-                    @Html.LabelFor(m => m.Especialidad)
-                    @Html.EditorFor(m => m.Especialidad, new { htmlAttributes = new { @class = "form-control" } })
-                    @Html.ValidationMessageFor(m => m.Especialidad, "", new { @class = "text-danger" })
-                </div>
-
-                <div class="form-group">
                     @Html.LabelFor(m => m.Contraseña)
                     @Html.EditorFor(m => m.Contraseña, new { htmlAttributes = new { @class = "form-control", @type = "password" } })
                     @Html.ValidationMessageFor(m => m.Contraseña, "", new { @class = "text-danger" })
@@ -53,10 +47,6 @@
             }
         </div>
     </section>
-
-    <div class="container-fluid text-center mt-5 fixed-bottom">
-        <footer>AWWS</footer>
-    </div>
 </body>
 </html>
 
@@ -71,7 +61,7 @@
         .wrapper h1 {
             font-size: 2rem;
             font-weight: bold;
-            color: #FA6C17;
+            color: #31bc71;
             margin-bottom: 20px;
         }
 
@@ -92,12 +82,13 @@
     }
 
     .btn-primary {
-        background-color: #FA6C17;
+        background-color: #31bc71;
         border: none;
+        color: #fff;
     }
 
         .btn-primary:hover {
-            background-color: #e85910;
+            background-color: #28a745;
         }
 
     .btn-secondary {

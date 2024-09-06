@@ -20,44 +20,41 @@
 <body>
     <section class="wrapper">
         <div class="container">
-            <div class="text-end mb-3">
-                <a href="@Url.Action("AsistenciaMecanico", "Inicio")" class="btn btn-register">
-                    <span class="material-icons">add_circle</span>
-                    <span>Generar QR de Asistencia</span>
-                </a>
-            </div>
+            <div class="content-box">
+                <div class="d-flex justify-content-between mb-3">
+                    <a href="@Url.Action("AsistenciaMecanico", "Inicio")" class="btn btn-asistencia">
+                        <span class="material-icons">add_circle</span>
+                        <span>QR de Asistencia</span>
+                    </a>
+                    <a href="@Url.Action("Registrar", "Inicio")" class="btn btn-register">
+                        <span class="material-icons">add_circle</span>
+                        <span>Registrar Mecánico</span>
+                    </a>
+                </div>
 
-            <div class="text-end mb-3">
-                <a href="@Url.Action("Registrar", "Inicio")" class="btn btn-register">
-                    <span class="material-icons">add_circle</span>
-                    <span>Registrar Mecánico</span>
-                </a>
-            </div>
-            <br />
-            <div class="container">
                 <div class="row">
                     @if (Model != null && Model.Any())
                     {
                         foreach (var mecanico in Model)
                         {
-                            <div class="col-md-4 mb-4">
-                                <div class="card mecanico-card">
-                                    <div class="card-body d-flex align-items-center">
+                            <div class="col-lg-4 col-md-6 col-sm-12 mb-3">
+                                <div class="card mecanico-card h-100">
+                                    <div class="card-body d-flex align-items-start">
                                         <div class="flex-grow-1">
                                             <h5 class="card-title">@mecanico.Nombre</h5>
                                             <p class="card-text"><strong>Número de Documento:</strong> @mecanico.NumeroDocumento</p>
                                             <p class="card-text"><strong>Estado:</strong> @(mecanico.Estado ? "Activo" : "No Activo")</p>
-                                            <div class="button-group d-flex justify-content-between mt-3">
-                                                <a href="@Url.Action("Editar", "Inicio", new { id = mecanico.NumeroDocumento })" class="btn btn-warning">Editar</a>
+                                            <div class="button-group d-flex justify-content-start mt-3">
+                                                <a href="@Url.Action("Editar", "Inicio", new { id = mecanico.NumeroDocumento })" class="btn btn-warning me-2">Editar</a>
                                                 <a href="@Url.Action("Eliminar", "Inicio", new { id = mecanico.NumeroDocumento })" class="btn btn-danger" onclick="return handleDelete(event, '@Url.Action("Eliminar", "Inicio", new { id = mecanico.NumeroDocumento })')">Eliminar</a>
-                                                <a href="#" class="btn btn-cargar-foto" data-bs-toggle="modal" data-bs-target="#modalCargarFoto" data-id="@mecanico.NumeroDocumento">
-                                                    <span class="material-icons">add_circle</span>
-                                                    <span>Cargar foto</span>
-                                                </a>
                                             </div>
                                         </div>
-                                        <div class="ms-3 text-center mecanico-img-container">
-                                            <img src="@mecanico.ImagenUrl" alt="@mecanico.Nombre" class="img-fluid" style="width: 90px; height: 90px; object-fit: cover;">
+                                        <div class="ms-3 text-center mecanico-img-container d-flex flex-column align-items-center">
+                                            <img src="@mecanico.ImagenUrl" alt="@mecanico.Nombre" class="img-fluid mb-2" style="max-width: 100%; height: auto;">
+                                            <a href="#" class="btn btn-cargar-foto mt-2" data-bs-toggle="modal" data-bs-target="#modalCargarFoto" data-id="@mecanico.NumeroDocumento">
+                                                <span class="material-icons">add_circle</span>
+                                                <span>Cargar foto</span>
+                                            </a>
                                         </div>
                                     </div>
                                 </div>
@@ -71,41 +68,39 @@
                         </div>
                     }
                 </div>
+
+                <!-- Modal de Cargar Foto -->
+                <div class="modal fade" id="modalCargarFoto" tabindex="-1" role="dialog" aria-labelledby="modalCargarFotoLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="modalCargarFotoLabel">Cargar Foto</h5>
+                                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                @using (Html.BeginForm("SubirFoto", "Inicio", FormMethod.Post, new { enctype = "multipart/form-data" }))
+                                {
+                                    @Html.AntiForgeryToken()
+                                    <input type="hidden" id="modalMecanicoId" name="numeroDocumento" />
+                                    <div class="form-group">
+                                        <label for="archivo">Seleccionar foto:</label>
+                                        <input type="file" name="archivo" id="archivo" />
+                                    </div>
+                                    <br />
+                                    <div class="d-flex justify-content-center align-items-center">
+                                        <button type="submit" class="btn btn-primary">Subir</button>
+                                    </div>
+
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </section>
-
-    <!-- Modal de Cargar Foto -->
-    <div class="modal fade" id="modalCargarFoto" tabindex="-1" role="dialog" aria-labelledby="modalCargarFotoLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="modalCargarFotoLabel">Cargar Foto</h5>
-                    <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    @using (Html.BeginForm("SubirFoto", "Inicio", FormMethod.Post, new { enctype = "multipart/form-data" }))
-                    {
-                        @Html.AntiForgeryToken()
-                        <input type="hidden" id="modalMecanicoId" name="numeroDocumento" />
-                        <div class="form-group">
-                            <label for="archivo">Seleccionar foto:</label>
-                            <input type="file" name="archivo" id="archivo" />
-                        </div>
-                        <button type="submit" class="btn btn-primary">Subir</button>
-                    }
-                </div>
-            </div>
-        </div>
-    </div>
-
-
-
-    <div class="container-fluid text-center mt-5 fixed-bottom" style="background-color: #D0D1D5; padding-top: 1rem; padding-bottom: 1rem;">
-        <footer>AWWS</footer>
-    </div>
 
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"></script>
     <script>
@@ -137,10 +132,8 @@
             });
         }
     </script>
-
 </body>
 </html>
-
 
 <style>
     /* Google Poppins Font CDN Link */
@@ -150,76 +143,57 @@
         box-sizing: border-box;
     }
 
-    /* Variables */
-    :root {
-        --primary-font-family: 'Poppins', sans-serif;
-        --light-white: #f5f8fa;
-        --gray: #5e6278;
-        --gray-1: #e3e3e3;
-        --primary-color: #FA6C17;
-    }
-
     body {
-        font-family: var(--primary-font-family);
-    }
-
-    .button-group .btn {
-        flex: 1;
-        margin-right: 5px;
-    }
-
-        .button-group .btn:last-child {
-            margin-right: 0;
-        }
-
-    .mecanico-card .btn {
-        width: 100%; /* Hace que todos los botones tengan el mismo ancho */
-        text-align: center;
-        white-space: nowrap; /* Evita que el texto dentro de los botones se divida en varias líneas */
-    }
-
-    .mecanico-card .btn-cargar-foto {
-        flex: 1;
-        margin-top: 0; /* Elimina el margen superior adicional */
-    }
-
-    /* Main CSS */
-    .wrapper {
-        padding: 20px;
-        background-color: var(--light-white);
+        font-family: 'Poppins', sans-serif;
+        display: flex;
+        flex-direction: column;
         min-height: 100vh;
     }
 
+    .wrapper {
+        padding: 20px;
+        background-color: #f5f8fa;
+        flex: 1;
+    }
+
+    .content-box {
+        border: 2px solid #dee2e6;
+        border-radius: 8px;
+        background-color: #ffffff;
+        padding: 20px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .row {
+        display: flex;
+        flex-wrap: wrap;
+        margin: -10px; /* Ajusta el espaciado entre tarjetas */
+    }
+
+    .col-lg-4, .col-md-6, .col-sm-12 {
+        padding: 10px;
+    }
+
     .mecanico-card {
-        width: 100%;
-        display: flex;
-        flex-direction: column;
-        justify-content: space-between;
-        margin: 0; /* Asegúrate de que no haya margen */
+        padding: 10px; /* Controla el espaciado interior */
     }
 
-    .card-body {
-        padding: 15px; /* Ajusta el padding según sea necesario */
-        margin: 0; /* Asegúrate de que no haya margen adicional */
-    }
-
-    .mecanico-card .card-body {
-        display: flex;
-        flex-direction: row;
-        align-items: center;
-    }
+        .mecanico-card .card-body {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            padding: 15px;
+        }
 
     .mecanico-img-container {
-        width: 100px; /* Ancho fijo para el contenedor de la imagen y el botón */
+        width: 100px;
         display: flex;
         flex-direction: column;
         align-items: center;
         justify-content: center;
-        margin: 0; /* Asegúrate de que no haya margen adicional */
     }
 
         .mecanico-img-container img {
-            margin-bottom: 10px;
             width: 80px;
             height: 80px;
             object-fit: cover;
@@ -230,61 +204,111 @@
         padding: 5px 10px;
     }
 
-    .btn-register {
-        background-color: #fa6c17;
+    .btn-asistencia {
+        background-color: #6c757d;
         border-radius: 50px;
         padding: 10px 10px;
         width: 255px;
-        color: #fff;
         font-weight: bold;
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        text-decoration: none;
-        transition: all 0.3s ease-in-out;
-        display: inline-block; /* Cambia display a inline-block */
-        text-align: center; /* Centra el texto */
+        text-align: center;
+        color: #fff;
+    }
+
+        .btn-asistencia .material-icons {
+            vertical-align: middle;
+            font-size: 24px;
+        }
+
+        .btn-asistencia span {
+            vertical-align: middle;
+            margin-left: 10px;
+        }
+
+        .btn-asistencia:hover {
+            background-color: #5a6268;
+        }
+
+    .btn-register {
+        background-color: #31bc71;
+        border-radius: 50px;
+        padding: 10px 10px;
+        width: 255px;
+        font-weight: bold;
+        text-align: center;
+        color: #fff;
     }
 
         .btn-register .material-icons {
-            vertical-align: middle; /* Alinea el icono verticalmente */
+            vertical-align: middle;
             font-size: 24px;
         }
 
         .btn-register span {
-            vertical-align: middle; /* Alinea el texto verticalmente */
-            margin-left: 10px; /* Añade espacio entre el icono y el texto */
+            vertical-align: middle;
+            margin-left: 10px;
         }
 
         .btn-register:hover {
-            background-color: #e85910;
-            box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+            background-color: #28a745;
         }
 
     .btn-cargar-foto {
-        background-color: var(--primary-color);
-        padding: 4px 8px; /* Ajusta el tamaño del botón */
+        background-color: #002D3C;
+        padding: 4px 8px;
         color: #fff;
         font-weight: bold;
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         text-decoration: none;
-        transition: all 0.3s ease-in-out;
         text-align: center;
-        font-size: 14px; /* Ajusta el tamaño del texto */
-        width: 130px; /* Ajusta el ancho del botón */
-        margin-left: 0; /* Asegúrate de que el botón no esté pegado al borde */
+        font-size: 14px;
+        width: 130px;
     }
 
         .btn-cargar-foto .material-icons {
             vertical-align: middle;
-            font-size: 18px; /* Ajusta el tamaño del icono */
+            font-size: 18px;
         }
 
-        .btn-cargar-foto span {
-            vertical-align: middle;
-            margin-left: 5px; /* Ajusta el espacio entre el icono y el texto */
-        }
+    .modal-content {
+        border-radius: 8px;
+        padding: 20px;
+        background-color: #fff;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    }
 
-        .btn-cargar-foto:hover {
-            background-color: #e85910;
-            box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+    .modal-header {
+        border-bottom: 1px solid #dee2e6;
+    }
+
+    .modal-title {
+        font-size: 1.25rem;
+        font-weight: bold;
+    }
+
+    .btn-close {
+        background: transparent;
+        border: none;
+        font-size: 1.5rem;
+    }
+
+    .modal-body {
+        padding: 15px;
+    }
+
+    .form-control {
+        border-radius: 4px;
+        border: 1px solid #ced4da;
+    }
+
+    .btn-primary {
+        background-color: #31bc71;
+        border: none;
+        border-radius: 4px;
+        padding: 10px 15px;
+        font-size: 1rem;
+        cursor: pointer;
+    }
+
+        .btn-primary:hover {
+            background-color: #308456;
         }
 </style>
