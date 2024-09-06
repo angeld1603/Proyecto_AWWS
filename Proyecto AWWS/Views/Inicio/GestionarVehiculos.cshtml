@@ -20,38 +20,36 @@
 <body>
     <section class="wrapper">
         <div class="container">
-            <div class="text-end mb-3">
-                <a href="@Url.Action("RegistrarVehiculos", "Inicio")" class="btn btn-register">
-                    <span class="material-icons">add_circle</span>
-                    <span>Registrar Vehículo</span>
-                </a>
-            </div>
-            <div class="list-group">
-                @foreach (var vehiculos in Model)
-                {
-                    <div class="list-group-item list-group-item-action d-flex align-items-center justify-content-between">
-                        <div class="d-flex align-items-center">
+            <div class="content-box">
+                <div class="text-end mb-3">
+                    <a href="@Url.Action("RegistrarVehiculos", "Inicio")" class="btn btn-register">
+                        <span class="material-icons">add_circle</span>
+                        <span>Registrar Vehículo</span>
+                    </a>
+                </div>
+                <div class="list-group">
+                    @foreach (var vehiculos in Model)
+                    {
+                        <div class="list-group-item list-group-item-action d-flex align-items-center justify-content-between">
+                            <div class="d-flex align-items-center">
+                                <div>
+                                    <h5 class="mb-1">@vehiculos.marca - @vehiculos.modelo</h5>
+                                    <p class="mb-0"><strong>ID del Propietario:</strong> @vehiculos.IdCliente</p>
+                                    <p class="mb-0"><strong>Nombre del Propietario:</strong> @vehiculos.Nombre</p>
+                                    <p class="mb-0"><strong>Placa:</strong> @vehiculos.placa</p>
+                                    <p class="mb-0"><strong>Modelo:</strong> @vehiculos.modelo</p>
+                                    <p class="mb-0"><strong>Año:</strong> @vehiculos.año</p>
+                                </div>
+                            </div>
                             <div>
-                                <h5 class="mb-1">@vehiculos.marca - @vehiculos.modelo</h5>
-                                <p class="mb-0"><strong>ID del Propietario:</strong> @vehiculos.IdCliente</p>
-                                <p class="mb-0"><strong>Nombre del Propietario:</strong> @vehiculos.Nombre</p>
-                                <p class="mb-0"><strong>Placa:</strong> @vehiculos.placa</p>
-                                <p class="mb-0"><strong>Modelo:</strong> @vehiculos.modelo</p>
-                                <p class="mb-0"><strong>Año:</strong> @vehiculos.año</p>
+                                <a href="@Url.Action("EliminarR", "Inicio", new { placa = vehiculos.placa })" class="btn btn-danger" onclick="return handleDelete(event, '@Url.Action("EliminarVehiculos", "Inicio", new { placa = vehiculos.placa })')">Eliminar</a>
                             </div>
                         </div>
-                        <div>
-                            <a href="@Url.Action("EliminarR", "Inicio", new { placa = vehiculos.placa })" class="btn btn-danger" onclick="return handleDelete(event, '@Url.Action("EliminarVehiculos", "Inicio", new { placa = vehiculos.placa })')">Eliminar</a>
-                        </div>
-                    </div>
-                }
+                    }
+                </div>
             </div>
         </div>
     </section>
-
-    <div class="container-fluid text-center mt-5 fixed-bottom">
-        <footer>AWWS</footer>
-    </div>
 
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"></script>
     <script>
@@ -64,7 +62,7 @@
                 icon: 'warning',
                 showCancelButton: true,
                 confirmButtonColor: '#d33',
-                cancelButtonColor: '#ffc107',
+                cancelButtonColor: '#secondary',
                 confirmButtonText: 'Sí, eliminar',
                 cancelButtonText: 'Cancelar'
             }).then((result) => {
@@ -86,6 +84,14 @@
             padding: 20px;
             background-color: #f5f8fa;
             min-height: 100vh;
+        }
+
+        .content-box {
+            border: 2px solid #dee2e6;
+            border-radius: 8px;
+            background-color: #ffffff;
+            padding: 20px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
 
         .list-group-item {
@@ -112,11 +118,6 @@
             color: #fff;
         }
 
-        .fixed-bottom {
-            background-color: #D0D1D5;
-            padding: 1rem;
-        }
-
         footer {
             margin: 0;
             padding: 10px 0;
@@ -124,7 +125,7 @@
         }
 
         .btn-register {
-            background-color: #fa6c17;
+            background-color: #31bc71;
             border-radius: 50px;
             padding: 10px 10px;
             width: 255px;
@@ -137,20 +138,26 @@
             text-align: center;
         }
 
-            .btn-register .material-icons {
-                vertical-align: middle;
-                font-size: 24px;
-            }
+        .btn-register .material-icons {
+            vertical-align: middle;
+            font-size: 24px;
+        }
 
-            .btn-register span {
-                vertical-align: middle;
-                margin-left: 10px;
-            }
+        .btn-register span {
+            vertical-align: middle;
+            margin-left: 10px;
+        }
 
             .btn-register:hover {
-                background-color: #e85910;
-                box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+                background-color: #28a745;
             }
+
+        @@media (max-width: 768px) {
+            .btn-register {
+                width: 100%; /* Botones a pantalla completa en móviles */
+                text-align: center;
+            }
+        }
     </style>
 </body>
 </html>

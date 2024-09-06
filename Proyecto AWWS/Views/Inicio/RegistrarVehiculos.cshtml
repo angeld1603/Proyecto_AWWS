@@ -7,76 +7,85 @@
 
 <section class="wrapper">
     <div class="container">
-        <h1>@ViewBag.Title</h1>
+        <div class="content-box">
+            <h1>@ViewBag.Title</h1>
 
-        @using (Html.BeginForm("RegistrarVehiculos", "Inicio", FormMethod.Post))
-        {
-            @Html.AntiForgeryToken()
-            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+            @using (Html.BeginForm("RegistrarVehiculos", "Inicio", FormMethod.Post))
+            {
+                @Html.AntiForgeryToken()
+                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
 
-            <div class="form-group">
-                <label for="Placa">Placa</label>
-                @Html.TextBoxFor(model => model.placa, new { @class = "form-control", required = "required" })
-                @Html.ValidationMessageFor(model => model.placa, "", new { @class = "text-danger" })
-            </div>
-
-            <div class="form-group">
-                <label for="Marca">Marca</label>
-                @Html.TextBoxFor(model => model.marca, new { @class = "form-control", required = "required" })
-                @Html.ValidationMessageFor(model => model.marca, "", new { @class = "text-danger" })
-            </div>
-
-            <div class="form-group">
-                <label for="Modelo">Modelo</label>
-                @Html.TextBoxFor(model => model.modelo, new { @class = "form-control", required = "required" })
-                @Html.ValidationMessageFor(model => model.modelo, "", new { @class = "text-danger" })
-            </div>
-
-            <div class="form-group">
-                <label for="Año">Año</label>
-                @Html.TextBoxFor(model => model.año, new { @class = "form-control", @type = "number", required = "required" })
-                @Html.ValidationMessageFor(model => model.año, "", new { @class = "text-danger" })
-            </div>
-
-            <div class="form-group">
-                <label for="IdCliente">ID del Propietario</label>
-                <div class="input-group">
-                    @Html.TextBoxFor(model => model.IdCliente, new { @class = "form-control", @type = "number", required = "required", id = "IdCliente" })
-                    <span class="input-group-btn">
-                        <button type="button" class="btn btn-info" onclick="buscarCliente()">Buscar</button>
-                    </span>
+                <div class="form-group">
+                    <label for="Placa">Placa</label>
+                    @Html.TextBoxFor(model => model.placa, new { @class = "form-control", required = "required" })
+                    @Html.ValidationMessageFor(model => model.placa, "", new { @class = "text-danger" })
                 </div>
-                @Html.ValidationMessageFor(model => model.IdCliente, "", new { @class = "text-danger" })
-            </div>
 
-            <div class="form-group">
-                <label for="Nombre">Nombre del Propietario</label>
-                @Html.TextBoxFor(model => model.Nombre, new { @class = "form-control", required = "required", id = "Nombre", @readonly = "readonly" })
-                @Html.ValidationMessageFor(model => model.Nombre, "", new { @class = "text-danger" })
-            </div>
+                <div class="form-group">
+                    <label for="Marca">Marca</label>
+                    @Html.TextBoxFor(model => model.marca, new { @class = "form-control", required = "required" })
+                    @Html.ValidationMessageFor(model => model.marca, "", new { @class = "text-danger" })
+                </div>
 
-            <div class="form-group mt-4">
-                <input type="submit" value="Registrar" class="btn btn-primary" />
-                <a href="@Url.Action("GestionarVehiculos", "Inicio")" class="btn btn-secondary">Cancelar</a>
-            </div>
-        }
+                <div class="form-group">
+                    <label for="Modelo">Modelo</label>
+                    @Html.TextBoxFor(model => model.modelo, new { @class = "form-control", required = "required" })
+                    @Html.ValidationMessageFor(model => model.modelo, "", new { @class = "text-danger" })
+                </div>
+
+                <div class="form-group">
+                    <label for="Año">Año</label>
+                    @Html.TextBoxFor(model => model.año, new { @class = "form-control", @type = "number", required = "required" })
+                    @Html.ValidationMessageFor(model => model.año, "", new { @class = "text-danger" })
+                </div>
+
+                <div class="form-group">
+                    <label for="IdCliente">ID del Propietario</label>
+                    <div class="input-group">
+                        @Html.TextBoxFor(model => model.IdCliente, new { @class = "form-control", @type = "number", required = "required", id = "IdCliente" })
+                        <span class="input-group-btn">
+                            <button type="button" class="btn btn-secondary" onclick="buscarCliente()">Buscar</button>
+                        </span>
+                    </div>
+                    @Html.ValidationMessageFor(model => model.IdCliente, "", new { @class = "text-danger" })
+                </div>
+
+                <div class="form-group">
+                    <label for="Nombre">Nombre del Propietario</label>
+                    @Html.TextBoxFor(model => model.Nombre, new { @class = "form-control", required = "required", id = "Nombre", @readonly = "readonly" })
+                    @Html.ValidationMessageFor(model => model.Nombre, "", new { @class = "text-danger" })
+                </div>
+
+                <div class="form-group mt-4">
+                    <input type="submit" value="Registrar" class="btn btn-primary" />
+                    <a href="@Url.Action("GestionarVehiculos", "Inicio")" class="btn btn-secondary">Cancelar</a>
+                </div>
+            }
+        </div>
     </div>
 </section>
 
 <style>
-    /* Estilos similares a los que usas en RegistrarMecanico */
     .wrapper {
         padding: 20px;
         background-color: #f5f8fa;
         min-height: 100vh;
     }
 
-        .wrapper h1 {
-            font-size: 2rem;
-            font-weight: bold;
-            color: #FA6C17;
-            margin-bottom: 20px;
-        }
+    .content-box {
+        border: 2px solid #dee2e6;
+        border-radius: 8px;
+        background-color: #ffffff;
+        padding: 20px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .wrapper h1 {
+        font-size: 2rem;
+        font-weight: bold;
+        color: #31bc71;
+        margin-bottom: 20px;
+    }
 
     .form-group {
         margin-bottom: 15px;
@@ -96,13 +105,13 @@
     }
 
     .btn-primary {
-        background-color: #FA6C17;
+        background-color: #31bc71;
         border: none;
         color: #fff;
     }
 
         .btn-primary:hover {
-            background-color: #e85910;
+            background-color: #28a745;
         }
 
     .btn-secondary {
