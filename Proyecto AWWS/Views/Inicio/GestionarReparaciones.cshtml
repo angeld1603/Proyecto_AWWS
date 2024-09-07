@@ -19,14 +19,13 @@
 </head>
 <body>
     <section class="wrapper">
-        <div class="container">
+        <div class="container content-box">
             <div class="text-end mb-3">
                 <a href="@Url.Action("RegistrarReparacion", "Inicio")" class="btn btn-register">
                     <span class="material-icons">add_circle</span>
                     <span>Registrar Reparación</span>
                 </a>
             </div>
-            <br />
 
             <div class="list-group">
                 @foreach (var reparacion in Model)
@@ -35,27 +34,18 @@
                         <div class="d-flex align-items-center">
                             <div>
                                 <h5 class="mb-1">@reparacion.Descripcion</h5>
+                                <p class="mb-0"><strong>ID del cliente:</strong> @reparacion.NumeroDocumento</p>
                                 <p class="mb-0"><strong>Fecha de ingreso:</strong> @reparacion.FechaIngreso</p>
                                 <p class="mb-0"><strong>Fecha de entrega prevista:</strong> @reparacion.FechaEntregaPrevista</p>
                                 <p class="mb-0"><strong>Estado:</strong> @reparacion.Estado</p>
-                                <p class="mb-0"><strong>ID Del Cliente:</strong> @reparacion.IdCliente</p>
                                 <p class="mb-0"><strong>Placa del vehiculo:</strong> @reparacion.placa</p>
-                                <p class="mb-0"><strong>Documento del cliente:</strong> @reparacion.NumeroDocumento</p>
                             </div>
-                        </div>
-                        <div>
-                            @*<a href="@Url.Action("EditarV", "Inicio", new { Id = reparacion.Id })" class="btn btn-warning me-2">Editar</a>*@
-                            @*<a href="@Url.Action("EliminarVehiculos", "Inicio", new { codigoReparacion = reparacion.CodigoReparacion})" class="btn btn-danger" onclick="return handleDelete(event, '@Url.Action("EliminarVehiculos", "Inicio", new { placa = vehiculos.placa })')">Eliminar</a>*@
                         </div>
                     </div>
                 }
             </div>
         </div>
     </section>
-
-    <div class="container-fluid text-center mt-5 fixed-bottom" style="background-color: #D0D1D5; padding-top: 1rem; padding-bottom: 1rem;">
-        <footer>AWWS</footer>
-    </div>
 
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"></script>
     <script>
@@ -84,31 +74,27 @@
 </html>
 
 <style>
-    /* Google Poppins Font CDN Link */
     * {
         margin: 0;
         padding: 0;
         box-sizing: border-box;
     }
 
-    /* Variables */
-    :root {
-        --primary-font-family: 'Poppins', sans-serif;
-        --light-white: #f5f8fa;
-        --gray: #5e6278;
-        --gray-1: #e3e3e3;
-        --primary-color: #FA6C17;
-    }
-
     body {
-        font-family: var(--primary-font-family);
+        font-family: 'Poppins', sans-serif;
     }
 
-    /* Main CSS */
     .wrapper {
         padding: 20px;
         background-color: #f5f8fa;
         min-height: 100vh;
+    }
+
+    .content-box {
+        background-color: #ffffff;
+        border-radius: 10px;
+        padding: 20px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     }
 
     .list-group-item {
@@ -129,7 +115,7 @@
     }
 
     .btn-register {
-        background-color: #fa6c17;
+        background-color: #31bc71;
         border-radius: 50px;
         padding: 10px 10px;
         width: 255px;
@@ -153,21 +139,6 @@
         }
 
         .btn-register:hover {
-            background-color: #e85910;
-            box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+            background-color: #28a745;
         }
-
-    .modal-content {
-        background-color: var(--light-white);
-    }
-
-    .container-fluid {
-        border-top: 1px solid var(--gray-1);
-    }
-
-    .fixed-bottom {
-        background-color: var(--light-white);
-        padding: 10px 0;
-        text-align: center;
-    }
 </style>
