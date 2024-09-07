@@ -8,16 +8,23 @@ using MongoDB.Driver;
 using CapaEntidad;
 using Microsoft.Ajax.Utilities;
 using QRCoder;
+using MongoDB.Bson;
 
 namespace Proyecto_AWWS.Controllers
 {
     public class InicioController : Controller
     {
         private readonly IMongoCollection<Mecanicos> mecanicoCollection;
+
         private readonly IMongoCollection<Vehiculos> vehiculoCollection;
+
         private readonly IMongoCollection<Reparacion> reparacionCollection;
+
         private readonly IMongoCollection<Clientes> clientesCollection;
+
         private readonly IMongoCollection<Citas> citasCollection;
+
+        private readonly IMongoCollection<Notificaciones> notificacionesCollection;
 
 
         public InicioController()
@@ -35,6 +42,8 @@ namespace Proyecto_AWWS.Controllers
             clientesCollection = database.GetCollection<Clientes>("Clientes");
 
             citasCollection = database.GetCollection<Citas>("Citas");
+
+            notificacionesCollection = database.GetCollection<Notificaciones>("Notificaciones");
         }
 
         //Vistas
@@ -374,8 +383,73 @@ namespace Proyecto_AWWS.Controllers
         // Acción para mostrar el formulario de gestion de citas
         public ActionResult GestionarCitas()
         {
-            var citas = citasCollection.Find(c => c.Estado == "Pendiente").ToList(); // Obtener las citas pendientes
+            // Obtener citas con estados "Pendiente" o "Confirmada"
+            var estados = new[] { "Pendiente", "Confirmada" };
+            var citas = citasCollection.Find(c => estados.Contains(c.Estado)).ToList();
+
             return View(citas);
+        }
+
+        public ActionResult VerNotificaciones()
+        {
+            var notificaciones = notificacionesCollection.Find(n => !n.Leida).ToList();
+            return View(notificaciones);
+        }
+
+        [HttpPost]
+        public ActionResult MarcarComoLeida(string id)
+        {
+            // Convertir el ID de string a ObjectId
+            if (!ObjectId.TryParse(id, out var notificacionId))
+            {
+                TempData["ErrorMessage"] = "ID de notificación inválido.";
+                return RedirectToAction("GestionarCitas"); // Ajustar según la vista que quieras mostrar después
+            }
+
+            // Crear el update para marcar la notificación como leída
+            var update = Builders<Notificaciones>.Update.Set(n => n.Leida, true);
+
+            // Actualizar la notificación en la base de datos
+            var resultado = notificacionesCollection.UpdateOne(n => n.Id == notificacionId.ToString(), update);
+
+            if (resultado.ModifiedCount > 0)
+            {
+                TempData["SuccessMessage"] = "Notificación marcada como leída.";
+            }
+            else
+            {
+                TempData["ErrorMessage"] = "No se pudo marcar la notificación como leída.";
+            }
+
+            return RedirectToAction("GestionarCitas"); // Ajustar según la vista que quieras mostrar después
+        }
+
+        [HttpPost]
+        public ActionResult ConfirmarCita(string id)
+        {
+            // Convertir el ID de string a ObjectId
+            if (!ObjectId.TryParse(id, out var citaId))
+            {
+                TempData["ErrorMessage"] = "ID de cita inválido.";
+                return RedirectToAction("GestionarCitas");
+            }
+
+            // Crear el update para cambiar el estado de la cita a "Confirmada"
+            var update = Builders<Citas>.Update.Set(c => c.Estado, "Confirmada");
+
+            // Actualizar la cita en la base de datos
+            var resultado = citasCollection.UpdateOne(c => c.Id == citaId.ToString(), update);
+
+            if (resultado.ModifiedCount > 0)
+            {
+                TempData["SuccessMessage"] = "Cita confirmada exitosamente.";
+            }
+            else
+            {
+                TempData["ErrorMessage"] = "No se pudo confirmar la cita.";
+            }
+
+            return RedirectToAction("GestionarCitas");
         }
     }
 }

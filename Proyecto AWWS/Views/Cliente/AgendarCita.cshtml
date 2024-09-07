@@ -2,41 +2,100 @@
 
 @{
     ViewBag.Title = "Solicitar Cita";
-    Layout = "~/Views/Shared/_Layout.cshtml";
+    Layout = "~/Views/Shared/_Layout - Cliente.cshtml";
 }
 
-<div class="container">
-    <h2>Solicitar Cita</h2>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title</title>
+    <link href="~/Content/css/styles.css" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <div class="content-box">
+            <h2>Solicitar Cita</h2>
 
-    @if (TempData["SuccessMessage"] != null)
-    {
-        <div class="alert alert-success">
-            @TempData["SuccessMessage"]
+            @if (TempData["SuccessMessage"] != null)
+            {
+                <div class="alert alert-success">
+                    @TempData["SuccessMessage"]
+                </div>
+            }
+
+            @if (TempData["ErrorMessage"] != null)
+            {
+                <div class="alert alert-danger">
+                    @TempData["ErrorMessage"]
+                </div>
+            }
+
+            @using (Html.BeginForm("SolicitarCita", "Cliente", FormMethod.Post))
+            {
+                <div class="form-group">
+                    @Html.LabelFor(model => model.FechaHora, "Fecha y Hora")
+                    @Html.TextBoxFor(model => model.FechaHora, new { @class = "form-control", type = "date" })
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Descripción, "Descripción")
+                    @Html.TextAreaFor(model => model.Descripción, new { @class = "form-control", rows = 4, placeholder = "Describe el motivo de la cita" })
+                </div>
+
+                <div class="form-group">
+                    <input type="submit" value="Solicitar Cita" class="btn btn-primary" />
+                    <a href="@Url.Action("Citas", "Cliente")" class="btn btn-secondary">Volver</a>
+                </div>
+            }
         </div>
+    </div>
+</body>
+</html>
+
+<style>
+    body {
+        margin: 0;
+        padding: 0;
+        font-family: 'Poppins', sans-serif;
+        background-color: #f5f8fa; /* Asegura que el fondo sea uniforme */
     }
 
-    @if (TempData["ErrorMessage"] != null)
-    {
-        <div class="alert alert-danger">
-            @TempData["ErrorMessage"]
-        </div>
+    .content-box {
+        background-color: #ffffff;
+        border-radius: 10px;
+        padding: 20px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     }
 
-    @using (Html.BeginForm("SolicitarCita", "Cliente", FormMethod.Post))
-    {
-        <div class="form-group">
-            @Html.LabelFor(model => model.FechaHora, "Fecha y Hora")
-            @Html.TextBoxFor(model => model.FechaHora, new { @class = "form-control", type = "date" })
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.Descripción, "Descripción")
-            @Html.TextAreaFor(model => model.Descripción, new { @class = "form-control", rows = 4, placeholder = "Describe el motivo de la cita" })
-        </div>
-
-        <div class="form-group">
-            <input type="submit" value="Solicitar Cita" class="btn btn-primary" />
-            <a href="@Url.Action("Inicio", "Cliente")" class="btn btn-secondary">Volver</a>
-        </div>
+    .form-group {
+        margin-bottom: 1rem;
     }
-</div>
+
+    .btn-primary {
+        background-color: #31bc71;
+        border: none;
+        color: #fff;
+    }
+
+        .btn-primary:hover {
+            background-color: #28a745;
+        }
+
+    .btn-secondary {
+        background-color: #6c757d;
+        border-color: #6c757d;
+        color: #fff;
+    }
+
+    .btn-primary:hover {
+        background-color: #28a745;
+    }
+
+    .btn-secondary:hover {
+        background-color: #5a6268;
+        border-color: #545b62;
+    }
+</style>

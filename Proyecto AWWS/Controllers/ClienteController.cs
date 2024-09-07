@@ -17,6 +17,7 @@ namespace Proyecto_AWWS.Controllers
         public ClienteController()
         {
             var client = new MongoClient("mongodb+srv://admin:zNG8KfdyNPLA44XZ@angeldior.53t301e.mongodb.net/");
+
             var database = client.GetDatabase("AWWS");
 
             citasCollection = database.GetCollection<Citas>("Citas");
@@ -27,6 +28,23 @@ namespace Proyecto_AWWS.Controllers
         public ActionResult Inicio()
         {
             return View();
+        }
+
+        public ActionResult Citas()
+        {
+            var idCliente = Session["IdCliente"]?.ToString();
+
+            if (string.IsNullOrEmpty(idCliente))
+            {
+                TempData["ErrorMessage"] = "No se pudo obtener el cliente. Inicie sesión de nuevo.";
+                return RedirectToAction("Login", "Login");
+            }
+
+            // Obtener las citas confirmadas para el cliente
+            var estados = new[] { "Pendiente", "Confirmada" };
+            var citaConfirmadas = citasCollection.Find(c => estados.Contains(c.Estado)).ToList();
+
+            return View(citaConfirmadas);
         }
 
         public ActionResult AgendarCita()
@@ -52,14 +70,18 @@ namespace Proyecto_AWWS.Controllers
                 // Notificar al administrador (puede ser por correo o notificación interna)
                 EnviarNotificacionAdministrador(citas);
 
-                // Redirigir a una vista de confirmación
-                return RedirectToAction("CitaConfirmada");
+                // Establecer el mensaje de éxito en TempData
+                TempData["SuccessMessage"] = "La cita ha sido solicitada exitosamente.";
+
+                // Redirigir a la vista de inicio del cliente (o cualquier vista donde desees mostrar el mensaje)
+                return RedirectToAction("Citas", "Cliente");
             }
 
             // Si no hay cliente en la sesión, redirigir al login
             TempData["Error"] = "Debe iniciar sesión para agendar una cita.";
             return RedirectToAction("Login", "Login");
         }
+
 
         public ActionResult CitaConfirmada()
         {

@@ -1,0 +1,163 @@
+﻿@model IEnumerable<CapaEntidad.Citas>
+
+@{
+    ViewBag.Title = "Citas Confirmadas";
+    Layout = "~/Views/Shared/_Layout - Cliente.cshtml";
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title</title>
+    <link href="~/Content/css/styles.css" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        @if (TempData["SuccessMessage"] != null)
+        {
+            <div class="alert alert-success">
+                @TempData["SuccessMessage"]
+            </div>
+        }
+
+        @if (TempData["ErrorMessage"] != null)
+        {
+            <div class="alert alert-danger">
+                @TempData["ErrorMessage"]
+            </div>
+        }
+
+        <div class="content-box">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h3>Mis Citas</h3>
+                <a href="@Url.Action("AgendarCita", "Cliente")" class="btn btn-register">
+                    <span class="material-icons">add_circle</span>
+                    <span>Registrar Cita</span>
+                </a>
+            </div>
+
+            @if (Model.Any())
+            {
+                <table class="table table-striped table-bordered">
+                    <thead>
+                        <tr>
+                            <th>Fecha y Hora</th>
+                            <th>Descripción</th>
+                            <th>Estado</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var cita in Model)
+                        {
+                            <tr>
+                                <td>@cita.FechaHora.ToString("g")</td>
+                                <td>@cita.Descripción</td>
+                                <td>@cita.Estado</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            }
+            else
+            {
+                <p>No tienes citas confirmadas en este momento.</p>
+            }
+        </div>
+    </div>
+</body>
+</html>
+
+<style>
+    body {
+        margin: 0;
+        padding: 0;
+        font-family: 'Poppins', sans-serif;
+        background-color: #f5f8fa; /* Asegura que el fondo sea uniforme */
+    }
+
+    .content-box {
+        background-color: #ffffff;
+        border-radius: 10px;
+        padding: 20px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .d-flex {
+        display: flex;
+    }
+
+    .justify-content-between {
+        justify-content: space-between;
+    }
+
+    .align-items-center {
+        align-items: center;
+    }
+
+    .mb-4 {
+        margin-bottom: 1.5rem;
+    }
+
+    .table {
+        width: 100%;
+        margin-bottom: 1rem;
+        color: #212529;
+        border-collapse: collapse;
+    }
+
+        .table thead th {
+            background-color: #002D3C;
+            color: #ffffff;
+            padding: 1rem;
+            text-align: left;
+        }
+
+        .table tbody td {
+            padding: 1rem;
+            vertical-align: top;
+            border-bottom: 1px solid #dee2e6;
+        }
+
+    .table-striped tbody tr:nth-of-type(odd) {
+        background-color: #f2f2f2;
+    }
+
+    .table-bordered {
+        border: 1px solid #dee2e6;
+    }
+
+        .table-bordered th, .table-bordered td {
+            border: 1px solid #dee2e6;
+        }
+
+    .btn-register {
+        background-color: #31bc71;
+        border-radius: 50px;
+        padding: 10px 10px;
+        width: 255px;
+        color: #fff;
+        font-weight: bold;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        text-decoration: none;
+        transition: all 0.3s ease-in-out;
+        display: inline-block;
+        text-align: center;
+    }
+
+        .btn-register .material-icons {
+            vertical-align: middle;
+            font-size: 24px;
+        }
+
+        .btn-register span {
+            vertical-align: middle;
+            margin-left: 10px;
+        }
+
+        .btn-register:hover {
+            background-color: #28a745;
+        }
+</style>

@@ -1,0 +1,32 @@
+﻿@model IEnumerable<CapaEntidad.Notificaciones>
+
+
+<body>
+    <div class="container">
+        <h2>Notificaciones</h2>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Mensaje</th>
+                    <th>Fecha</th>
+                    <th>Acción</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var notificacion in Model)
+                {
+                    <tr>
+                        <td>@notificacion.Mensaje</td>
+                        <td>@notificacion.Fecha.ToString("g")</td>
+                        <td>
+                            <form action="@Url.Action("MarcarComoLeida", "Inicio")" method="post">
+                                <input type="hidden" name="id" value="@notificacion.Id" />
+                                <button type="submit" class="btn btn-primary">Marcar como Leída</button>
+                            </form>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</body>

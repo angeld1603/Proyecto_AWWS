@@ -7,30 +7,49 @@
 
 <div class="container">
     <h2>Gestionar Citas</h2>
+
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success">
+            @TempData["SuccessMessage"]
+        </div>
+    }
+
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger">
+            @TempData["ErrorMessage"]
+        </div>
+    }
+
     <table class="table">
         <thead>
             <tr>
-                <th>Cliente</th>
                 <th>Fecha y Hora</th>
                 <th>Descripción</th>
                 <th>Estado</th>
-                <th>Acciones</th>
+                <th>Cliente</th>
+                <th>Acción</th>
             </tr>
         </thead>
         <tbody>
-            @foreach (var citas in Model)
+            @foreach (var cita in Model)
             {
                 <tr>
-                    <td>@citas.IdCliente</td>
-                    <td>@citas.FechaHora.ToString("g")</td>
-                    <td>@citas.Descripción</td>
-                    <td>@citas.Estado</td>
+                    <td>@cita.FechaHora.ToString("g")</td>
+                    <td>@cita.Descripción</td>
+                    <td>@cita.Estado</td>
+                    <td>@cita.IdCliente</td> <!-- Puedes mostrar más información del cliente si lo deseas -->
                     <td>
-                        @if (citas.Estado == "Pendiente") 
+                        @if (cita.Estado == "Pendiente")
                         {
-                            <a href="@Url.Action("ConfirmarCita", new { id = citas.Id })" class="btn btn-success">Confirmar</a>
-                            <a href="@Url.Action("CancelarCita", new { id = citas.Id })" class="btn btn-danger">Cancelar</a>
+                            <!-- Formulario para confirmar cita -->
+                            <form action="@Url.Action("ConfirmarCita", "Inicio")" method="post">
+                                <input type="hidden" name="id" value="@cita.Id" />
+                                <button type="submit" class="btn btn-primary">Confirmar</button>
+                            </form>
                         }
+                        <!-- Agregar botón para cancelar cita si lo deseas -->
                     </td>
                 </tr>
             }

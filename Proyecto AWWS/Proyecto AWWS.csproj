@@ -307,6 +307,8 @@
     <Content Include="Views\Inicio\AsistenciaMecanico.cshtml" />
     <Content Include="Views\Mecanico\Servicio.cshtml" />
     <Content Include="Views\Cliente\AgendarCita.cshtml" />
+    <Content Include="Views\Inicio\VerNotificaciones.cshtml" />
+    <Content Include="Views\Cliente\Citas.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
