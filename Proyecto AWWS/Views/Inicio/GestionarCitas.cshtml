@@ -1,6 +1,39 @@
-﻿
+﻿@model IEnumerable<CapaEntidad.Citas>
+
 @{
-    ViewBag.Title = "Gestionar citas";
+    ViewBag.Title = "Gestionar Citas";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
+<div class="container">
+    <h2>Gestionar Citas</h2>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Cliente</th>
+                <th>Fecha y Hora</th>
+                <th>Descripción</th>
+                <th>Estado</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var citas in Model)
+            {
+                <tr>
+                    <td>@citas.IdCliente</td>
+                    <td>@citas.FechaHora.ToString("g")</td>
+                    <td>@citas.Descripción</td>
+                    <td>@citas.Estado</td>
+                    <td>
+                        @if (citas.Estado == "Pendiente") 
+                        {
+                            <a href="@Url.Action("ConfirmarCita", new { id = citas.Id })" class="btn btn-success">Confirmar</a>
+                            <a href="@Url.Action("CancelarCita", new { id = citas.Id })" class="btn btn-danger">Cancelar</a>
+                        }
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

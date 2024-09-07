@@ -17,6 +17,7 @@ namespace Proyecto_AWWS.Controllers
         private readonly IMongoCollection<Vehiculos> vehiculoCollection;
         private readonly IMongoCollection<Reparacion> reparacionCollection;
         private readonly IMongoCollection<Clientes> clientesCollection;
+        private readonly IMongoCollection<Citas> citasCollection;
 
 
         public InicioController()
@@ -32,6 +33,8 @@ namespace Proyecto_AWWS.Controllers
             reparacionCollection = database.GetCollection<Reparacion>("Reparacion");
 
             clientesCollection = database.GetCollection<Clientes>("Clientes");
+
+            citasCollection = database.GetCollection<Citas>("Citas");
         }
 
         //Vistas
@@ -246,13 +249,6 @@ namespace Proyecto_AWWS.Controllers
             return Json(vehiculos, JsonRequestBehavior.AllowGet);
         }
 
-
-        // Acción para mostrar el formulario de gestion de citas
-        public ActionResult GestionarCitas()
-        {
-            return View();
-        }
-
         [HttpPost]
         public ActionResult Registrar(Mecanicos mecanico)
         {
@@ -373,6 +369,13 @@ namespace Proyecto_AWWS.Controllers
             byte[] qrCodeImage = qrCode.GetGraphic(10);
 
             return File(qrCodeImage, "image/png");
+        }
+
+        // Acción para mostrar el formulario de gestion de citas
+        public ActionResult GestionarCitas()
+        {
+            var citas = citasCollection.Find(c => c.Estado == "Pendiente").ToList(); // Obtener las citas pendientes
+            return View(citas);
         }
     }
 }

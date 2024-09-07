@@ -104,8 +104,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Asistencia.cs" />
+    <Compile Include="Citas.cs" />
     <Compile Include="Clientes.cs" />
     <Compile Include="Mecanicos.cs" />
+    <Compile Include="Notificaciones.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Reparacion.cs" />
     <Compile Include="Usuarios.cs" />

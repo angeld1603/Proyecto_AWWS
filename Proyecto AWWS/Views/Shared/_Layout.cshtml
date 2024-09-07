@@ -36,19 +36,13 @@
                     </ul>
                     <ul class="navbar-nav ms-auto">
                         <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle text-light" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                <i class="fas fa-user-circle"></i>
-                            </a>
-                            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown" style="background-color: rgba(var(--bs-dark-rgb), var(--bs-bg-opacity))">
-                                <li>
-                                    <a class="dropdown-item text-light" href="@Url.Action("Login", "Login")">
-                                        <i class="fas fa-sign-out-alt"></i> Cerrar Sesión
-                                    </a>
-                                </li>
-                            </ul>
+                            <div>
+                                <a class="text-light" href="@Url.Action("Login", "Login")">
+                                    <i class="fas fa-sign-out-alt"></i> Cerrar Sesión
+                                </a>
+                            </div>
                         </li>
                     </ul>
-
                 </div>
             </div>
         </nav>
@@ -60,10 +54,9 @@
 </body>
 </html>
 
-
 <style>
     body {
-        font-family: Arial, sans-serif;
+        font-family: 'Poppins', sans-serif;
         margin: 0;
         padding: 0;
         display: grid;
@@ -73,8 +66,7 @@
 
     .navbar {
         padding: 15px;
-        box-sizing: border-box;
-        background-color: #002D3C; /* Color de fondo personalizado */
+        background-color: #002D3C;
     }
 
     .navbar-brand {
@@ -89,17 +81,17 @@
         transition: 0.3s ease;
     }
 
-        .navbar-nav .nav-link:hover {
-            background-color: #575757; /* Color al pasar el mouse */
-        }
+    .navbar-nav .nav-link:hover {
+        background-color: #575757;
+    }
 
-    /* Estilo para el menú desplegable */
+    /* Mejora del menú desplegable */
     .dropdown-menu {
         display: none;
         position: absolute;
         top: 100%;
         right: 0;
-        background-color: #002D3C; /* Mismo color de fondo */
+        background-color: #002D3C;
         border-radius: 5px;
         box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
         min-width: 160px;
@@ -115,11 +107,40 @@
         transition: background-color 0.3s;
     }
 
-        .dropdown-item:hover {
-            background-color: #575757;
-        }
+    .dropdown-item:hover {
+        background-color: #575757;
+    }
 
     .dropdown-toggle::after {
         display: none;
+    }
+
+    /* Estilos responsivos */
+    @@media (max-width: 992px) {
+        .navbar-brand {
+            font-size: 19px; 
+        }
+
+        .navbar-nav .nav-link {
+            font-size: 14px; /* Texto más pequeño en los enlaces */
+        }
+
+        .navbar-toggler {
+            padding: 5px; /* Espaciado más pequeño para el botón del menú */
+        }
+
+        /* Menú desplegable compacto en responsive */
+        .dropdown-menu {
+            width: 100%; /* Hace que el menú desplegable ocupe todo el ancho */
+            position: relative;
+            background-color: #002D3C;
+            border-radius: 0;
+            padding: 0;
+        }
+
+        .dropdown-item {
+            padding: 10px 20px;
+            font-size: 14px; /* Texto más pequeño en el menú desplegable */
+        }
     }
 </style>

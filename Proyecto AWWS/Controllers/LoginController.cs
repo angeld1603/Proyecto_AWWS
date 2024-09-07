@@ -65,7 +65,7 @@ namespace Proyecto_AWWS.Controllers
             if (cliente != null)
             {
                 Session["Nombre"] = cliente.Nombre.Split()[0];
-                //Session["Rol"] = "Cliente"; // Opcional, para diferenciar el rol
+                Session["IdCliente"] = cliente.IdCliente;
                 return RedirectToAction("Inicio", "Cliente");
             }
 

@@ -13,11 +13,11 @@
     <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
 </head>
 
-<body class="bg-primary">
+<body style="background-color: #f5f8fa;">
     <div id="layoutAuthentication">
         <div id="layoutAuthentication_content">
             <main>
-                <div class="container-fluid" style="background-color: rgba(var(--bs-dark-rgb),var(--bs-bg-opacity)) !important;color:white; padding-top: 1rem; padding-bottom: 1rem;">
+                <div class="container-fluid" style="background-color: #002D3C; color: #fff; padding-top: 1rem; padding-bottom: 1rem;">
                     <div class="row align-items-center">
                         <div class="col-md-6">
                             <div class="d-flex align-items-center">
@@ -59,10 +59,11 @@
                                         {
                                             <div class="alert alert-danger" role="alert">
                                                 @TempData["Error"]
-                                            </div>}
+                                            </div>
+                                        }
 
                                         <div class="d-flex justify-content-center mt-4 mb-0">
-                                            <button class="btn btn-primary" style="background-color: #FA6C17 " type="submit">Iniciar Sesión</button>
+                                            <button class="btn btn-primary" type="submit">Iniciar Sesión</button>
                                         </div>
                                     </form>
                                 </div>
@@ -71,12 +72,6 @@
                     </div>
                 </div>
             </main>
-        </div>
-    </div>
-
-    <div class="container-fluid text-center mt-5 fixed-bottom" style="background-color: #D0D1D5; padding-top: 1rem; padding-bottom: 1rem;">
-        <div class="container">
-            <footer>AWWS</footer>
         </div>
     </div>
 
@@ -102,7 +97,6 @@
 </body>
 </html>
 
-
 <style>
     .mr-2,
     .btn-lg {
@@ -114,11 +108,11 @@
     }
 
     .position-relative .form-floating .form-control {
-        padding-right: 2.5rem; /* Espacio para el botón dentro del input */
+        padding-right: 2.5rem;
     }
 
     .position-relative button {
-        right: 10px; /* Ajuste de la posición del botón */
+        right: 10px;
     }
 
     .display-5 {
@@ -126,4 +120,14 @@
         font-weight: bold;
     }
 
+    .btn-primary {
+        background-color: #31bc71;
+        border: none;
+        color: #fff;
+    }
+
+        .btn-primary:hover {
+            background-color: #28a745;
+            color: #000;
+        }
 </style>

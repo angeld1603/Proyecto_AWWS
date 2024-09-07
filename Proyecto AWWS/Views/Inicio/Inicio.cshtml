@@ -3,16 +3,38 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<!-- En el <head> de tu _Layout.cshtml -->
-<div class="carousel-container">
-    <div class="carousel">
-        <div class="carousel-images">
-            <img src="~/Content/Images/Imagen1.jpg" alt="Imagen 1" class="active">
-            <img src="~/Content/Images/Imagen2.jpg" alt="Imagen 2">
-            <img src="~/Content/Images/Imagen3.jpg" alt="Imagen 3">
+<html>
+<body style="background-color: #f5f8fa;">
+    <div class="container mt-5">
+        <div class="content-box d-flex">
+            <!-- Carrusel de imágenes -->
+            <div class="carousel-container">
+                <div class="carousel">
+                    <div class="carousel-images">
+                        <img src="~/Content/Images/Imagen1.jpg" alt="Imagen 1" class="active">
+                        <img src="~/Content/Images/Imagen2.jpg" alt="Imagen 2">
+                        <img src="~/Content/Images/Imagen3.jpg" alt="Imagen 3">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Caja de texto al lado del carrusel -->
+            <div class="text-box ms-4 text-center">
+                <h2>Bienvenido a Auto Workshop Web Services</h2>
+                <p>
+                    Ofrecemos los mejores servicios para el mantenimiento y reparación de vehículos. Nuestro equipo
+                    de mecánicos altamente capacitados está listo para ofrecerte un servicio de alta calidad. Confía en
+                    nosotros para mantener tu vehículo en perfectas condiciones.
+                </p>
+                <p>
+                    Contamos con una amplia gama de servicios, desde mantenimiento preventivo hasta reparaciones
+                    complejas.
+                </p>
+            </div>
         </div>
     </div>
-</div>
+</body>
+</html>
 
 <script>
     document.addEventListener("DOMContentLoaded", function () {
@@ -29,23 +51,26 @@
     });
 </script>
 
-
 <style>
+    /* Contenedor principal con borde */
+    .content-box {
+        border: 2px solid #ccc; /* Borde gris claro */
+        border-radius: 15px; /* Bordes redondeados */
+        padding: 20px; /* Espacio interno */
+        background-color: white;
+        box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); /* Sombra ligera */
+    }
+
+    /* Carrusel */
     .carousel-container {
-        display: flex;
-        justify-content: flex-start; /* Alineado a la izquierda */
-        align-items: center;
-        height: 80vh; /* Ajusta la altura para que no ocupe toda la pantalla */
-        overflow: hidden;
-        padding-left: 20px; /* Espacio entre el carrusel y el borde izquierdo */
+        width: 60%; /* Carrusel ocupa 50% del ancho */
     }
 
     .carousel {
-        width: 50%; /* Ajusta el ancho del carrusel */
-        height: 60vh; /* Ajusta la altura del carrusel */
-        margin-left: 0; /* Alineado a la izquierda */
+        width: 100%;
+        height: 60vh;
         position: relative;
-        box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2); /* Sombra para destacar el carrusel */
+        box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
     }
 
     .carousel-images {
@@ -59,8 +84,8 @@
             top: 0;
             left: 0;
             width: 100%;
-            height: 100%; /* Asegura que las imágenes ocupen toda la altura del carrusel */
-            object-fit: cover; /* Mantiene la proporción de las imágenes dentro del recuadro */
+            height: 100%;
+            object-fit: cover;
             opacity: 0;
             transition: opacity 1s ease-in-out;
         }
@@ -70,4 +95,18 @@
                 z-index: 1;
             }
 
+    /* Estilo para el texto */
+    .text-box {
+        width: 50%;
+    }
+
+        .text-box h2 {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        .text-box p {
+            font-size: 1.1rem;
+            line-height: 1.6;
+        }
 </style>
