@@ -5,54 +5,181 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<div class="container">
-    <h2>Gestionar Citas</h2>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title</title>
+    <link href="~/Content/css/styles.css" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        @if (TempData["SuccessMessage"] != null)
+        {
+            <div class="alert alert-success">
+                @TempData["SuccessMessage"]
+            </div>
+        }
 
-    @if (TempData["SuccessMessage"] != null)
-    {
-        <div class="alert alert-success">
-            @TempData["SuccessMessage"]
-        </div>
-    }
+        @if (TempData["ErrorMessage"] != null)
+        {
+            <div class="alert alert-danger">
+                @TempData["ErrorMessage"]
+            </div>
+        }
 
-    @if (TempData["ErrorMessage"] != null)
-    {
-        <div class="alert alert-danger">
-            @TempData["ErrorMessage"]
-        </div>
-    }
+        <div class="content-box">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h3>Gestionar Citas</h3>
+                <!-- Icono de notificación -->
+                <a href="@Url.Action("VerNotificaciones", "Inicio")" class="notification-icon position-relative">
+                    <i class="material-icons" style="font-size: 40px; cursor: pointer;">notifications</i>
+                    <span class="badge badge-danger notification-badge" style="display: none;">1</span>
+                </a>
+            </div>
 
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Fecha y Hora</th>
-                <th>Descripción</th>
-                <th>Estado</th>
-                <th>Cliente</th>
-                <th>Acción</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var cita in Model)
+            @if (Model.Any())
             {
-                <tr>
-                    <td>@cita.FechaHora.ToString("g")</td>
-                    <td>@cita.Descripción</td>
-                    <td>@cita.Estado</td>
-                    <td>@cita.IdCliente</td> <!-- Puedes mostrar más información del cliente si lo deseas -->
-                    <td>
-                        @if (cita.Estado == "Pendiente")
+                <table class="table table-striped table-bordered">
+                    <thead>
+                        <tr>
+                            <th>Fecha y Hora</th>
+                            <th>Descripción</th>
+                            <th>Estado</th>
+                            <th>Cliente</th>
+                            <th>Acción</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var cita in Model)
                         {
-                            <!-- Formulario para confirmar cita -->
-                            <form action="@Url.Action("ConfirmarCita", "Inicio")" method="post">
-                                <input type="hidden" name="id" value="@cita.Id" />
-                                <button type="submit" class="btn btn-primary">Confirmar</button>
-                            </form>
+                            <tr>
+                                <td>@cita.FechaHora.ToString("g")</td>
+                                <td>@cita.Descripción</td>
+                                <td>@cita.Estado</td>
+                                <td>@cita.IdCliente</td>
+                                <td>
+                                    @if (cita.Estado == "Pendiente")
+                                    {
+                                        <form action="@Url.Action("ConfirmarCita", "Inicio")" method="post" style="display: inline;">
+                                            <input type="hidden" name="id" value="@cita.Id" />
+                                            <button type="submit" class="btn btn-confirmar">Confirmar</button>
+                                        </form>
+                                    }
+                                </td>
+                            </tr>
                         }
-                        <!-- Agregar botón para cancelar cita si lo deseas -->
-                    </td>
-                </tr>
+                    </tbody>
+                </table>
             }
-        </tbody>
-    </table>
-</div>
+            else
+            {
+                <p>No hay citas para gestionar en este momento.</p>
+            }
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        // Verificar si hay nuevas notificaciones y actualizar el badge
+        function checkNotifications() {
+            $.get('@Url.Action("VerificarNuevasNotificaciones", "Inicio")', function (data) {
+                if (data.hasNewNotifications) {
+                    $('.notification-badge').text(data.count).show();
+                } else {
+                    $('.notification-badge').hide();
+                }
+            });
+        }
+
+        // Marcar notificaciones como leídas al hacer clic en el icono de notificación
+        $('.notification-icon').click(function (e) {
+            e.preventDefault();
+            $.post('@Url.Action("MarcarComoLeida", "Inicio")', function () {
+                window.location.href = '@Url.Action("VerNotificaciones", "Inicio")';
+            });
+        });
+
+        setInterval(checkNotifications, 30000);
+        $(document).ready(checkNotifications);
+    </script>
+</body>
+</html>
+
+<style>
+    body {
+        margin: 0;
+        padding: 0;
+        font-family: 'Poppins', sans-serif;
+        background-color: #f5f8fa;
+    }
+
+    .content-box {
+        background-color: #ffffff;
+        border-radius: 10px;
+        padding: 20px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .btn-confirmar {
+        background-color: #0d6efd;
+        border: none;
+        color: #fff;
+    }
+
+        .btn-confirmar:hover {
+            background-color: #0d6efd;
+        }
+
+    .table {
+        width: 100%;
+        margin-bottom: 1rem;
+        color: #212529;
+        border-collapse: collapse;
+    }
+
+        .table thead th {
+            background-color: #002D3C;
+            color: #ffffff;
+            padding: 1rem;
+            text-align: left;
+        }
+
+        .table tbody td {
+            padding: 1rem;
+            vertical-align: top;
+            border-bottom: 1px solid #dee2e6;
+        }
+
+    .table-striped tbody tr:nth-of-type(odd) {
+        background-color: #f2f2f2;
+    }
+
+    .table-bordered {
+        border: 1px solid #dee2e6;
+    }
+
+        .table-bordered th, .table-bordered td {
+            border: 1px solid #dee2e6;
+        }
+
+    .notification-icon {
+        position: relative;
+        display: inline-block;
+    }
+
+    .notification-badge {
+        position: absolute;
+        top: -10px;
+        right: -10px;
+        background-color: red;
+        color: white;
+        padding: 5px 10px;
+        border-radius: 50%;
+        font-size: 12px;
+    }
+</style>

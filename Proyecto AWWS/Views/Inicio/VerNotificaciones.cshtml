@@ -1,32 +1,116 @@
 ﻿@model IEnumerable<CapaEntidad.Notificaciones>
 
+@{
+    ViewBag.Title = "Notificaciones";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notificaciones</title>
+    <link href="~/Content/css/styles.css" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css">
+</head>
 <body>
     <div class="container">
-        <h2>Notificaciones</h2>
-        <table class="table">
-            <thead>
-                <tr>
-                    <th>Mensaje</th>
-                    <th>Fecha</th>
-                    <th>Acción</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var notificacion in Model)
-                {
-                    <tr>
-                        <td>@notificacion.Mensaje</td>
-                        <td>@notificacion.Fecha.ToString("g")</td>
-                        <td>
-                            <form action="@Url.Action("MarcarComoLeida", "Inicio")" method="post">
-                                <input type="hidden" name="id" value="@notificacion.Id" />
-                                <button type="submit" class="btn btn-primary">Marcar como Leída</button>
-                            </form>
-                        </td>
-                    </tr>
-                }
-            </tbody>
-        </table>
+        <div class="content-box">
+            <h2>Notificaciones</h2>
+            <br />
+            @if (Model.Any())
+            {
+                <table class="table table-striped table-bordered">
+                    <thead>
+                        <tr>
+                            <th>Mensaje</th>
+                            <th>Fecha</th>
+                            <th>Acción</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var notificacion in Model)
+                        {
+                            <tr>
+                                <td>@notificacion.Mensaje</td>
+                                <td>@notificacion.Fecha.ToString("g")</td>
+                                <td>
+                                    <form action="@Url.Action("MarcarComoLeida", "Inicio")" method="post">
+                                        <input type="hidden" name="id" value="@notificacion.Id" />
+                                        <button type="submit" class="btn btn-primary">Marcar como Leída</button>
+                                    </form>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            }
+            else
+            {
+                <p>No hay notificaciones para mostrar en este momento.</p>
+            }
+        </div>
     </div>
 </body>
+</html>
+
+<style>
+    body {
+        margin: 0;
+        padding: 0;
+        font-family: 'Poppins', sans-serif;
+        background-color: #f5f8fa; /* Fondo uniforme */
+    }
+
+    .content-box {
+        background-color: #ffffff;
+        border-radius: 10px;
+        padding: 20px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        margin-top: 20px;
+    }
+
+    .table {
+        width: 100%;
+        margin-bottom: 1rem;
+        color: #212529;
+        border-collapse: collapse;
+    }
+
+        .table thead th {
+            background-color: #002D3C;
+            color: #ffffff;
+            padding: 1rem;
+            text-align: left;
+        }
+
+        .table tbody td {
+            padding: 1rem;
+            vertical-align: top;
+            border-bottom: 1px solid #dee2e6;
+        }
+
+    .table-striped tbody tr:nth-of-type(odd) {
+        background-color: #f2f2f2;
+    }
+
+    .table-bordered {
+        border: 1px solid #dee2e6;
+    }
+
+        .table-bordered th, .table-bordered td {
+            border: 1px solid #dee2e6;
+        }
+
+    .btn-primary {
+        background-color: #0d6efd;
+        border-color: #0d6efd;
+    }
+
+        .btn-primary:hover {
+            background-color: #0a58ca;
+            border-color: #0a58ca;
+        }
+</style>

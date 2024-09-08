@@ -20,10 +20,11 @@
 <body>
     <section class="wrapper">
         <div class="container content-box">
-            <div class="text-end mb-3">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2>Gestionar reparaciones</h2>
                 <a href="@Url.Action("RegistrarReparacion", "Inicio")" class="btn btn-register">
                     <span class="material-icons">add_circle</span>
-                    <span>Registrar Reparación</span>
+                    <span>Registrar reparacion</span>
                 </a>
             </div>
 
@@ -84,6 +85,22 @@
         font-family: 'Poppins', sans-serif;
     }
 
+    .d-flex {
+        display: flex;
+    }
+
+    .justify-content-between {
+        justify-content: space-between;
+    }
+
+    .align-items-center {
+        align-items: center;
+    }
+
+    h2{
+        margin:0;
+    }
+
     .wrapper {
         padding: 20px;
         background-color: #f5f8fa;
@@ -117,14 +134,14 @@
     .btn-register {
         background-color: #31bc71;
         border-radius: 50px;
-        padding: 10px 10px;
-        width: 255px;
+        padding: 10px 20px;
         color: #fff;
         font-weight: bold;
         box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         text-decoration: none;
         transition: all 0.3s ease-in-out;
-        display: inline-block;
+        display: inline-flex;
+        align-items: center;
         text-align: center;
     }
 

@@ -451,5 +451,19 @@ namespace Proyecto_AWWS.Controllers
 
             return RedirectToAction("GestionarCitas");
         }
+
+        public JsonResult VerificarNuevasNotificaciones()
+        {
+            var notificacionesNoLeidas = notificacionesCollection.CountDocuments(n => !n.Leida);
+
+            var response = new
+            {
+                hasNewNotifications = notificacionesNoLeidas > 0,
+                count = notificacionesNoLeidas
+            };
+
+            return Json(response, JsonRequestBehavior.AllowGet);
+        }
+
     }
 }
