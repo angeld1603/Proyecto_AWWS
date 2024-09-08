@@ -15,6 +15,7 @@ namespace Proyecto_AWWS.Controllers
         private readonly IMongoCollection<Mecanicos> mecanicos;
         private readonly IMongoCollection<Clientes> clientes;
 
+        
         public LoginController()
         {
             //Cliente mongo con la cadena de conexion

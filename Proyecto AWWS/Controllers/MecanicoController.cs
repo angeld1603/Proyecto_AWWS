@@ -5,21 +5,29 @@ using System.Web;
 using System.Web.Mvc;
 using MongoDB.Driver;
 using CapaEntidad;
+using System.Threading.Tasks;
 
 namespace Proyecto_AWWS.Controllers
 {
     public class MecanicoController : Controller
     {
         private readonly IMongoCollection<Mecanicos> mecanicosCollection;
+
         private readonly IMongoCollection<Asistencia> asistenciaCollection;
+
+        private readonly IMongoCollection<Reparacion> reparacionCollection;
 
         public MecanicoController()
         {
-            var client = new MongoClient("mongodb+srv://admin:zNG8KfdyNPLA44XZ@angeldior.53t301e.mongodb.net/");
+            var client = new MongoClient("mongodb+srv://admin:zNG8KfdyNPLA44XZ@angeldior.53t301e.mongodb.net/"); 
+
             var database = client.GetDatabase("AWWS");
 
             mecanicosCollection = database.GetCollection<Mecanicos>("Mecanicos");
+
             asistenciaCollection = database.GetCollection<Asistencia>("Asistencia");
+
+            reparacionCollection = database.GetCollection<Reparacion>("Reparacion");
         }
 
         public ActionResult Inicio()
@@ -27,12 +35,45 @@ namespace Proyecto_AWWS.Controllers
             return View();
         }
 
-        public ActionResult GestionarReparaciones()
+        public async Task<ActionResult> GestionarReparaciones()
         {
-            return View();
+            // Recuperar el número de documento desde la sesión y convertirlo a entero
+            if (int.TryParse(Session["NumeroDocumento"]?.ToString(), out int numeroDocumento))
+            {
+                // Obtener las reparaciones asignadas al mecánico
+                var listaReparaciones = await reparacionCollection
+                    .Find(r => r.NumeroDocumento == numeroDocumento)
+                    .ToListAsync();
+
+                return View(listaReparaciones);
+            }
+            else
+            {
+                // Si no se puede convertir el número de documento o no está en la sesión, redirigir al login
+                return RedirectToAction("Login", "Login");
+            }
         }
 
-        public ActionResult Servicio()
+        [HttpPost]
+        public ActionResult ActualizarEstado(string id, string nuevoEstado)
+        {
+            if (!string.IsNullOrEmpty(id) && !string.IsNullOrEmpty(nuevoEstado))
+            {
+                var filter = Builders<Reparacion>.Filter.Eq(r => r.Id, id);
+                var update = Builders<Reparacion>.Update.Set(r => r.Estado, nuevoEstado);
+                reparacionCollection.UpdateOne(filter, update);
+
+                TempData["SuccessMessage"] = "Estado de la reparación actualizado correctamente.";
+            }
+            else
+            {
+                TempData["ErrorMessage"] = "No se pudo actualizar el estado de la reparación.";
+            }
+
+            return RedirectToAction("GestionarReparaciones"); // Asegúrate de que esta vista existe
+        }
+        
+        public ActionResult Asistencia()
         {
             return View();
         }

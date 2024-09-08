@@ -1,8 +1,140 @@
-﻿
+﻿@model IEnumerable<CapaEntidad.Reparacion>
 @{
-    ViewBag.Title = "Gestionar reparaciones";
+    ViewBag.Title = "Reparaciones";
     Layout = "~/Views/Shared/_Layout - Mecanico.cshtml";
 }
 
-<h2>Gestionar reparaciones</h2>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reparaciones</title>
+    <link href="~/Content/css/styles.css" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <div class="content-box">
+            <h2>Reparaciones Asignadas</h2>
+            <br />
+            @if (Model.Any())
+            {
+                <div class="table-responsive">
+                    <table class="table table-striped table-bordered">
+                        <thead>
+                            <tr>
+                                <th>ID Reparación</th>
+                                <th>Descripción</th>
+                                <th>Fecha Ingreso</th>
+                                <th>Fecha Entrega</th>
+                                <th>Estado</th>
+                                <th>Actualizar Estado</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var reparacion in Model)
+                            {
+                                <tr>
+                                    <td>@reparacion.Id</td>
+                                    <td>@reparacion.Descripcion</td>
+                                    <td>@reparacion.FechaIngreso</td> <!-- Actualización aquí -->
+                                    <td>@reparacion.FechaEntregaPrevista</td> <!-- Actualización aquí -->
+                                    <td>@reparacion.Estado</td>
+                                    <td>
+                                        <form action="@Url.Action("ActualizarEstado", "Mecanico")" method="post">
+                                            <input type="hidden" name="id" value="@reparacion.Id" />
+                                            <select name="nuevoEstado" class="form-control">
+                                                <option value="Pendiente" @(reparacion.Estado == "Pendiente" ? "selected" : "")>Pendiente</option>
+                                                <option value="En Progreso" @(reparacion.Estado == "En Progreso" ? "selected" : "")>En Progreso</option>
+                                                <option value="Completado" @(reparacion.Estado == "Completado" ? "selected" : "")>Completado</option>
+                                            </select>
+                                            <button type="submit" class="btn btn-primary mt-2">Actualizar</button>
+                                        </form>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
+            else
+            {
+                <p>No hay reparaciones asignadas en este momento.</p>
+            }
+        </div>
+    </div>
+</body>
+</html>
 
+
+<style>
+    /* Asegúrate de que el CSS sea compatible con la vista, puedes añadir ajustes específicos aquí si es necesario */
+    .container {
+        width: 90%;
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 15px;
+    }
+
+    .content-box {
+        background-color: #ffffff;
+        border-radius: 10px;
+        padding: 20px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        margin-top: 20px;
+    }
+
+    .table-responsive {
+        overflow-x: auto;
+    }
+
+    .table {
+        width: 100%;
+        margin-bottom: 1rem;
+        color: #212529;
+        border-collapse: collapse;
+    }
+
+        .table thead th {
+            background-color: #002D3C;
+            color: #ffffff;
+            padding: 1rem;
+            text-align: left;
+        }
+
+        .table tbody td {
+            padding: 1rem;
+            vertical-align: top;
+            border-bottom: 1px solid #dee2e6;
+        }
+
+    .table-striped tbody tr:nth-of-type(odd) {
+        background-color: #f2f2f2;
+    }
+
+    .table-bordered {
+        border: 1px solid #dee2e6;
+    }
+
+        .table-bordered th, .table-bordered td {
+            border: 1px solid #dee2e6;
+        }
+
+    .btn-primary {
+        background-color: #0d6efd;
+        border-color: #0d6efd;
+        color: #fff;
+        padding: 0.5rem 1rem;
+        font-size: 0.9rem;
+    }
+
+        .btn-primary:hover {
+            background-color: #0a58ca;
+            border-color: #0a58ca;
+        }
+
+    .form-control {
+        width: 100%;
+    }
+</style>

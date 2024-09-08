@@ -26,7 +26,7 @@ namespace Proyecto_AWWS.Controllers
 
         private readonly IMongoCollection<Notificaciones> notificacionesCollection;
 
-
+        
         public InicioController()
         {
             var client = new MongoClient("mongodb+srv://admin:zNG8KfdyNPLA44XZ@angeldior.53t301e.mongodb.net/");
