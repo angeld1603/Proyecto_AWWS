@@ -37,8 +37,16 @@
             {
                 <div class="form-group">
                     @Html.LabelFor(model => model.FechaHora, "Fecha y Hora")
-                    @Html.TextBoxFor(model => model.FechaHora, new { @class = "form-control", type = "date" })
+                    @Html.TextBoxFor(model => model.FechaHora, new
+                    {
+                        @class = "form-control",
+                        type = "datetime-local",
+                        min = DateTime.Now.ToString("yyyy-MM-ddT07:00"),
+                        max = DateTime.Now.AddYears(1).ToString("yyyy-MM-ddT17:00") // Permite un año en el futuro con horas límite de 5 PM
+                    })
                 </div>
+
+
 
                 <div class="form-group">
                     @Html.LabelFor(model => model.Descripción, "Descripción")

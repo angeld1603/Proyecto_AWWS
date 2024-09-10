@@ -75,7 +75,8 @@ namespace Proyecto_AWWS.Controllers
         
         public ActionResult Asistencia()
         {
-            return View();
+            var mecanicos = asistenciaCollection.Find(a => true).ToList();
+            return View(asistenciaCollection);
         }
 
         [HttpGet]

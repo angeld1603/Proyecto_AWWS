@@ -11,13 +11,15 @@
 <body>
     <div>
         <nav class="navbar navbar-expand-lg navbar-dark">
+            <div class="text-start">
+                <img decoding="async" src="~/Content/Images/logonavbar.png" class="img-fluid logo-small" alt="logo">
+            </div>
             <div class="container">
-                <a class="navbar-brand">Auto Workshop Web Services</a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="collapse navbar-collapse" id="navbarNav">
-                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <ul class="navbar-nav mx-auto mb-2 mb-lg-0">
                         <li class="nav-item">
                             <a class="nav-link" href="@Url.Action("Inicio", "Inicio")">Inicio</a>
                         </li>
@@ -62,6 +64,12 @@
         display: grid;
         min-height: 100vh;
         box-sizing: border-box;
+    }
+
+    .logo-small {
+        max-width: 170px; /* Ajusta el tamaño del logo */
+        height: auto;
+        margin-left: 100px; /* Esto empuja la imagen hacia la derecha */
     }
 
     .navbar {

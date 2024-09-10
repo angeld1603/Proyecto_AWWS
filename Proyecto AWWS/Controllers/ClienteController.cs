@@ -32,20 +32,24 @@ namespace Proyecto_AWWS.Controllers
 
         public ActionResult Citas()
         {
+            // Obtener el IdCliente desde la sesión
             var idCliente = Session["IdCliente"]?.ToString();
 
+            // Si no hay un cliente autenticado, redirigir al login
             if (string.IsNullOrEmpty(idCliente))
             {
                 TempData["ErrorMessage"] = "No se pudo obtener el cliente. Inicie sesión de nuevo.";
                 return RedirectToAction("Login", "Login");
             }
 
-            // Obtener las citas confirmadas para el cliente
+            // Filtrar las citas por el IdCliente y el estado (Pendiente o Confirmada)
             var estados = new[] { "Pendiente", "Confirmada" };
-            var citaConfirmadas = citasCollection.Find(c => estados.Contains(c.Estado)).ToList();
+            var citasCliente = citasCollection.Find(c => c.IdCliente == idCliente && estados.Contains(c.Estado)).ToList();
 
-            return View(citaConfirmadas);
+            // Pasar las citas filtradas a la vista
+            return View(citasCliente);
         }
+
 
         public ActionResult AgendarCita()
         {
@@ -55,32 +59,33 @@ namespace Proyecto_AWWS.Controllers
         [HttpPost]
         public ActionResult SolicitarCita(Citas citas)
         {
-            // Verificar si el cliente está en la sesión
             if (Session["IdCliente"] != null)
             {
+                // Validar que la hora de la cita esté en el rango permitido (7:00 AM - 5:00 PM)
+                TimeSpan startTime = new TimeSpan(7, 0, 0);  // 7:00 AM
+                TimeSpan endTime = new TimeSpan(17, 0, 0);   // 5:00 PM
+                TimeSpan citaHora = citas.FechaHora.TimeOfDay;
+
+                if (citaHora < startTime || citaHora > endTime)
+                {
+                    TempData["ErrorMessage"] = "La hora de la cita debe estar entre 7:00 AM y 5:00 PM.";
+                    return RedirectToAction("AgendarCita");
+                }
+
                 // Asigna el estado inicial de la cita
                 citas.Estado = "Pendiente";
-
-                // Obtener el IdCliente desde la sesión y asignarlo a la cita
                 citas.IdCliente = Session["IdCliente"].ToString();
-
-                // Guardar la cita en la base de datos
                 citasCollection.InsertOne(citas);
-
-                // Notificar al administrador (puede ser por correo o notificación interna)
                 EnviarNotificacionAdministrador(citas);
 
-                // Establecer el mensaje de éxito en TempData
                 TempData["SuccessMessage"] = "La cita ha sido solicitada exitosamente.";
-
-                // Redirigir a la vista de inicio del cliente (o cualquier vista donde desees mostrar el mensaje)
                 return RedirectToAction("Citas", "Cliente");
             }
 
-            // Si no hay cliente en la sesión, redirigir al login
-            TempData["Error"] = "Debe iniciar sesión para agendar una cita.";
+            TempData["ErrorMessage"] = "Debe iniciar sesión para agendar una cita.";
             return RedirectToAction("Login", "Login");
         }
+
 
 
         public ActionResult CitaConfirmada()

@@ -27,7 +27,7 @@
                                 <th>ID Reparación</th>
                                 <th>Descripción</th>
                                 <th>Fecha Ingreso</th>
-                                <th>Fecha Entrega</th>
+                                <th>Fecha Entrega Prevista</th>
                                 <th>Estado</th>
                                 <th>Actualizar Estado</th>
                             </tr>
@@ -45,8 +45,7 @@
                                         <form action="@Url.Action("ActualizarEstado", "Mecanico")" method="post">
                                             <input type="hidden" name="id" value="@reparacion.Id" />
                                             <select name="nuevoEstado" class="form-control">
-                                                <option value="Pendiente" @(reparacion.Estado == "Pendiente" ? "selected" : "")>Pendiente</option>
-                                                <option value="En Progreso" @(reparacion.Estado == "En Progreso" ? "selected" : "")>En Progreso</option>
+                                                <option value="En progreso" @(reparacion.Estado == "En Progreso" ? "selected" : "")>En progreso</option>
                                                 <option value="Completado" @(reparacion.Estado == "Completado" ? "selected" : "")>Completado</option>
                                             </select>
                                             <button type="submit" class="btn btn-primary mt-2">Actualizar</button>

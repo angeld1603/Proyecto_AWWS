@@ -45,7 +45,7 @@
                                             <p class="card-text"><strong>Número de Documento:</strong> @mecanico.NumeroDocumento</p>
                                             <p class="card-text"><strong>Estado:</strong> @(mecanico.Estado ? "Activo" : "No Activo")</p>
                                             <div class="button-group d-flex justify-content-start mt-3">
-                                                <a href="@Url.Action("Editar", "Inicio", new { id = mecanico.NumeroDocumento })" class="btn btn-warning me-2">Editar</a>
+                                                <a href="@Url.Action("Editar", "Inicio", new { id = mecanico.NumeroDocumento })" class="btn btn-editar me-2">Editar</a>
                                                 <a href="@Url.Action("Eliminar", "Inicio", new { id = mecanico.NumeroDocumento })" class="btn btn-danger" onclick="return handleDelete(event, '@Url.Action("Eliminar", "Inicio", new { id = mecanico.NumeroDocumento })')">Eliminar</a>
                                             </div>
                                         </div>
@@ -84,7 +84,7 @@
                                     <input type="hidden" id="modalMecanicoId" name="numeroDocumento" />
                                     <div class="form-group">
                                         <label for="archivo">Seleccionar foto:</label>
-                                        <input type="file" name="archivo" id="archivo" class="form-control" />
+                                        <input type="file" name="archivo" id="archivo" class="form-control" required />
                                     </div>
                                     <br />
                                     <div class="d-flex justify-content-center align-items-center">
@@ -267,15 +267,16 @@
 
     .btn-cargar-foto:hover {
         background-color: #001E29;
+        color: #fff;
     }
 
-    .btn-warning {
+    .btn-editar {
         background-color: #31bc71;
         border: none;
         color: white;
     }
 
-        .btn-warning:hover {
+        .btn-editar:hover {
             background-color: #28a745;
         }
 
