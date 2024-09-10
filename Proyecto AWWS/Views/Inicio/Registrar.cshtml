@@ -33,7 +33,7 @@
 
                     <div class="form-group">
                         @Html.Label("Número de documento")
-                        @Html.TextBoxFor(model => model.NumeroDocumento, new { @class = "form-control", @type = "number", required = "required" })
+                        @Html.TextBoxFor(model => model.NumeroDocumento, new { @class = "form-control", @type = "number", required = "required", maxlength = "10" })
                         @Html.ValidationMessageFor(model => model.NumeroDocumento, "", new { @class = "text-danger" })
                     </div>
 

@@ -1,0 +1,149 @@
+﻿
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Reportes</title>
+    <link href="~/Content/css/styles.css" rel="stylesheet" />
+    <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
+</head>
+
+<body class="bg-primary">
+    <div id="layoutAuthentication">
+        <div class="container mt-5">
+            <div class="d-flex justify-content-start mt-3">
+                <button onclick="window.location.href='@Url.Action("Inicio", "Inicio")'" class="btn btn-secondary btn-sm">
+                    <i class="fas fa-arrow-left"></i> Regresar
+                </button>
+            </div>
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="card">
+                        <div class="card-header text-white" style="background-color: #002D3C">
+                            <h3>Seleccionar Tipo de Reporte</h3>
+                        </div>
+                        <div class="card-body">
+                            <form>
+                                <div class="form-group mb-3">
+                                    <label for="reportOptions" class="form-label">Tipo de Reporte</label>
+                                    <select class="form-select" id="reportOptions">
+                                        <option value="" disabled selected>Seleccione una opción</option>
+                                        <option value="Asistencias">Asistencias</option>
+                                    </select>
+                                </div>
+
+                                <!-- Filtro por Fecha -->
+                                <div class="form-group mb-3">
+                                    <label for="dateFilter" class="form-label">Fecha</label>
+                                    <input type="date" id="dateFilter" class="form-control" />
+                                </div>
+
+                                <div class="d-grid gap-2">
+                                    <button type="button" class="btn btn-mostrar btn-lg" onclick="generateReport()">Mostrar Reportes</button>
+                                    <button type="button" class="btn btn-descargar btn-lg" onclick="downloadReport()">Descargar Reportes</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-8">
+                    <div class="card">
+                        <div class="card-header text-white" style="background-color: #002D3C">
+                            <h3>Reportes</h3>
+                        </div>
+                        <div class="card-body">
+                            <iframe id="pdfFrame" style="display: none; width: 100%; height: 500px;" frameborder="0"></iframe>
+                            <div id="reportTable" style="display: none;">
+                                <table class="table table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th>Numero Documento</th>
+                                            <th>Nombre</th>
+                                            <th>Fecha Entrada</th>
+                                            <th>Fecha Salida</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="reportTableBody">
+                                        <!-- Aquí se insertarán los datos de los reportes -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+    <script src="~/Scripts/js2/scripts.js"></script>
+
+    <script>
+        function generateReport() {
+            var selectElement = document.getElementById("reportOptions");
+            var selectedOption = selectElement.options[selectElement.selectedIndex].value;
+            var date = document.getElementById("dateFilter").value;
+
+            if (selectedOption === "Asistencias") {
+                var reportTable = document.getElementById("reportTable");
+                var tableBody = document.getElementById("reportTableBody");
+
+                fetch('@Url.Action("GenerarReporte", "Inicio")' + '?tipo=Asistencias&fecha=' + date)
+                    .then(response => response.json())
+                    .then(data => {
+                        tableBody.innerHTML = '';
+                        data.forEach(record => {
+                            var row = document.createElement("tr");
+                            row.innerHTML = `
+                                <td>${record.NumeroDocumento}</td>
+                                <td>${record.Nombre}</td>
+                                <td>${record.FechaEntrada}</td>
+                                <td>${record.FechaSalida}</td>
+                            `;
+                            tableBody.appendChild(row);
+                        });
+                        reportTable.style.display = 'block';
+                    })
+                    .catch(error => console.error('Error:', error));
+            } else {
+                alert("Por favor, seleccione un tipo de reporte válido.");
+            }
+        }
+
+        function downloadReport() {
+            var selectElement = document.getElementById("reportOptions");
+            var selectedOption = selectElement.options[selectElement.selectedIndex].value;
+            var date = document.getElementById("dateFilter").value;
+
+            if (selectedOption === "Asistencias") {
+                var url = '@Url.Action("DescargarReporte", "Mecanico")' + '?tipo=Asistencias';
+
+                if (date) url += '&fecha=' + date;
+
+                window.location.href = url;
+            } else {
+                alert("Por favor, seleccione un tipo de reporte válido.");
+            }
+        }
+    </script>
+</body>
+</html>
+<style>
+    .btn-mostrar, .btn-descargar {
+        background-color: #31bc71;
+        border-radius: 50px;
+        padding: 10px 10px;
+        font-weight: bold;
+        text-align: center;
+        color: #fff;
+    }
+
+        .btn-mostrar:hover {
+            background-color: #28a745;
+        }
+
+    .table th, .table td {
+        text-align: center;
+    }
+</style>

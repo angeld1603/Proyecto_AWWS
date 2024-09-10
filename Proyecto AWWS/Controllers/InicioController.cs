@@ -9,6 +9,7 @@ using CapaEntidad;
 using Microsoft.Ajax.Utilities;
 using QRCoder;
 using MongoDB.Bson;
+using static System.Net.WebRequestMethods;
 
 namespace Proyecto_AWWS.Controllers
 {
@@ -25,6 +26,8 @@ namespace Proyecto_AWWS.Controllers
         private readonly IMongoCollection<Citas> citasCollection;
 
         private readonly IMongoCollection<Notificaciones> notificacionesCollection;
+
+        private readonly IMongoCollection<Asistencia> asistenciaCollection;
 
         
         public InicioController()
@@ -44,6 +47,8 @@ namespace Proyecto_AWWS.Controllers
             citasCollection = database.GetCollection<Citas>("Citas");
 
             notificacionesCollection = database.GetCollection<Notificaciones>("Notificaciones");
+
+            asistenciaCollection = database.GetCollection<Asistencia>("Asistencia");
         }
 
         //Vistas
@@ -463,6 +468,46 @@ namespace Proyecto_AWWS.Controllers
             };
 
             return Json(response, JsonRequestBehavior.AllowGet);
+        }
+
+        public ActionResult GestionarReportes()
+        {
+            return View();
+        }
+
+        public JsonResult GenerarReporte(string tipo, DateTime? fecha)
+        {
+            if (tipo == "Asistencias")
+            {
+                // Crear un filtro vacío que selecciona todos los registros
+                var filter = Builders<Asistencia>.Filter.Empty;
+
+                // Si se proporciona una fecha, añadir un filtro por esa fecha
+                if (fecha.HasValue)
+                {
+                    // Filtrar por la fecha de entrada (solo la parte de la fecha, sin la hora)
+                    filter = Builders<Asistencia>.Filter.And(
+                        Builders<Asistencia>.Filter.Gte(a => a.FechaEntrada, fecha.Value.Date),
+                        Builders<Asistencia>.Filter.Lt(a => a.FechaEntrada, fecha.Value.Date.AddDays(1))
+                    );
+                }
+
+                // Obtener las asistencias de la base de datos según el filtro
+                var asistencias = asistenciaCollection.Find(filter).ToList();
+
+                // Seleccionar los campos que nos interesan y formatear la respuesta
+                var resultado = asistencias.Select(a => new {
+                    a.NumeroDocumento,
+                    a.Nombre,
+                    FechaEntrada = a.FechaEntrada.ToString("yyyy-MM-dd HH:mm:ss"),
+                    FechaSalida = a.FechaSalida.HasValue ? a.FechaSalida.Value.ToString("yyyy-MM-dd HH:mm:ss") : "N/A"
+                }).ToList();
+
+                return Json(resultado, JsonRequestBehavior.AllowGet);
+            }
+
+            // Si el tipo de reporte no es "Asistencias", devolver un mensaje de error
+            return Json(new { mensaje = "Tipo de reporte no válido" }, JsonRequestBehavior.AllowGet);
         }
 
     }

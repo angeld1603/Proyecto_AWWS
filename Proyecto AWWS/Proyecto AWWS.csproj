@@ -309,6 +309,7 @@
     <Content Include="Views\Inicio\VerNotificaciones.cshtml" />
     <Content Include="Views\Cliente\Citas.cshtml" />
     <Content Include="Views\Mecanico\Asistencia.cshtml" />
+    <Content Include="Views\Inicio\GestionarReportes.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
