@@ -1,15 +1,16 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using MongoDB.Driver;
 using CapaEntidad;
-using Microsoft.Ajax.Utilities;
 using QRCoder;
 using MongoDB.Bson;
-using static System.Net.WebRequestMethods;
+using OfficeOpenXml;
+using OfficeOpenXml.Style;
+using System.Drawing;
+
 
 namespace Proyecto_AWWS.Controllers
 {
@@ -49,6 +50,9 @@ namespace Proyecto_AWWS.Controllers
             notificacionesCollection = database.GetCollection<Notificaciones>("Notificaciones");
 
             asistenciaCollection = database.GetCollection<Asistencia>("Asistencia");
+
+            ExcelPackage.LicenseContext = LicenseContext.NonCommercial; // O LicenseContext.Commercial si tienes una licencia comercial
+
         }
 
         //Vistas
@@ -483,36 +487,152 @@ namespace Proyecto_AWWS.Controllers
         {
             if (tipo == "Asistencias")
             {
-                // Crear un filtro vacío que selecciona todos los registros
                 var filter = Builders<Asistencia>.Filter.Empty;
 
-                // Si se proporciona una fecha, añadir un filtro por esa fecha
                 if (fecha.HasValue)
                 {
-                    // Filtrar por la fecha de entrada (solo la parte de la fecha, sin la hora)
                     filter = Builders<Asistencia>.Filter.And(
                         Builders<Asistencia>.Filter.Gte(a => a.FechaEntrada, fecha.Value.Date),
                         Builders<Asistencia>.Filter.Lt(a => a.FechaEntrada, fecha.Value.Date.AddDays(1))
                     );
                 }
 
-                // Obtener las asistencias de la base de datos según el filtro
                 var asistencias = asistenciaCollection.Find(filter).ToList();
 
-                // Seleccionar los campos que nos interesan y formatear la respuesta
-                var resultado = asistencias.Select(a => new {
+                var resultadoAsistencias = asistencias.Select(a => new
+                {
                     a.NumeroDocumento,
                     a.Nombre,
                     FechaEntrada = a.FechaEntrada.ToString("yyyy-MM-dd HH:mm:ss"),
                     FechaSalida = a.FechaSalida.HasValue ? a.FechaSalida.Value.ToString("yyyy-MM-dd HH:mm:ss") : "N/A"
                 }).ToList();
 
-                return Json(resultado, JsonRequestBehavior.AllowGet);
+                return Json(resultadoAsistencias, JsonRequestBehavior.AllowGet);
             }
 
-            // Si el tipo de reporte no es "Asistencias", devolver un mensaje de error
+            else if (tipo == "Reparaciones")
+            {
+                var filter = Builders<Reparacion>.Filter.Empty;
+
+                if (fecha.HasValue)
+                {
+                    var startDate = fecha.Value.Date;
+                    var endDate = startDate.AddDays(1); // Fin del día para la comparación
+
+                    filter = Builders<Reparacion>.Filter.And(
+                        Builders<Reparacion>.Filter.Gte(r => r.FechaIngreso, startDate),
+                        Builders<Reparacion>.Filter.Lt(r => r.FechaIngreso, endDate)
+                    );
+                }
+
+                var reparaciones = reparacionCollection.Find(filter).ToList();
+
+                var resultadoReparaciones = reparaciones.Select(r => new {
+                    r.Descripcion,
+                    FechaIngreso = r.FechaIngreso.ToString("yyyy-MM-dd"),
+                    FechaEntregaPrevista = r.FechaEntregaPrevista.HasValue ? r.FechaEntregaPrevista.Value.ToString("yyyy-MM-dd") : "N/A",
+                    r.Estado,
+                    r.IdCliente,
+                    r.placa,
+                    r.NumeroDocumento
+                }).ToList();
+
+                return Json(resultadoReparaciones, JsonRequestBehavior.AllowGet);
+            }
+
             return Json(new { mensaje = "Tipo de reporte no válido" }, JsonRequestBehavior.AllowGet);
         }
 
+        public ActionResult GenerarReporteExcel(string tipo, DateTime? fecha)
+        {
+            using (var package = new ExcelPackage())
+            {
+                ExcelWorksheet worksheet;
+                string[] headers;
+
+                if (tipo == "Reparaciones")
+                {
+                    headers = new[] { "Placa", "Cliente", "Mecánico", "Fecha Ingreso", "Fecha Entrega Prevista", "Descripción" };
+                    worksheet = package.Workbook.Worksheets.Add("Reparaciones");
+                    var reparaciones = reparacionCollection.Find(r => true).ToList();
+
+                    // Add headers
+                    for (int i = 0; i < headers.Length; i++)
+                    {
+                        worksheet.Cells[1, i + 1].Value = headers[i];
+                        worksheet.Cells[1, i + 1].Style.Font.Bold = true;
+                        worksheet.Cells[1, i + 1].Style.Fill.PatternType = ExcelFillStyle.Solid;
+                        worksheet.Cells[1, i + 1].Style.Fill.BackgroundColor.SetColor(Color.LightGray);
+                        worksheet.Cells[1, i + 1].Style.Border.BorderAround(ExcelBorderStyle.Thin);
+                    }
+
+                    // Add data
+                    int row = 2;
+                    foreach (var reparacion in reparaciones)
+                    {
+                        worksheet.Cells[row, 1].Value = reparacion.placa;
+                        worksheet.Cells[row, 2].Value = clientesCollection.Find(c => c.IdCliente == reparacion.IdCliente).FirstOrDefault()?.Nombre;
+                        worksheet.Cells[row, 3].Value = mecanicoCollection.Find(m => m.NumeroDocumento == reparacion.NumeroDocumento).FirstOrDefault()?.Nombre;
+                        worksheet.Cells[row, 4].Value = reparacion.FechaIngreso.ToShortDateString();
+                        worksheet.Cells[row, 5].Value = reparacion.FechaEntregaPrevista?.ToShortDateString() ?? "N/A";
+                        worksheet.Cells[row, 6].Value = reparacion.Descripcion;
+
+                        for (int col = 1; col <= headers.Length; col++)
+                        {
+                            worksheet.Cells[row, col].Style.Border.BorderAround(ExcelBorderStyle.Thin);
+                        }
+
+                        row++;
+                    }
+                }
+                else if (tipo == "Asistencias")
+                {
+                    headers = new[] { "Número Documento", "Nombre", "Fecha Entrada", "Fecha Salida" };
+                    worksheet = package.Workbook.Worksheets.Add("Asistencias");
+                    var asistencias = asistenciaCollection.Find(a => true).ToList();
+
+                    // Add headers
+                    for (int i = 0; i < headers.Length; i++)
+                    {
+                        worksheet.Cells[1, i + 1].Value = headers[i];
+                        worksheet.Cells[1, i + 1].Style.Font.Bold = true;
+                        worksheet.Cells[1, i + 1].Style.Fill.PatternType = ExcelFillStyle.Solid;
+                        worksheet.Cells[1, i + 1].Style.Fill.BackgroundColor.SetColor(Color.LightGray);
+                        worksheet.Cells[1, i + 1].Style.Border.BorderAround(ExcelBorderStyle.Thin);
+                    }
+
+                    // Add data
+                    int row = 2;
+                    foreach (var asistencia in asistencias)
+                    {
+                        worksheet.Cells[row, 1].Value = asistencia.NumeroDocumento;
+                        worksheet.Cells[row, 2].Value = asistencia.Nombre;
+                        worksheet.Cells[row, 3].Value = asistencia.FechaEntrada.ToShortDateString();
+                        worksheet.Cells[row, 4].Value = asistencia.FechaSalida?.ToShortDateString() ?? "N/A";
+
+                        for (int col = 1; col <= headers.Length; col++)
+                        {
+                            worksheet.Cells[row, col].Style.Border.BorderAround(ExcelBorderStyle.Thin);
+                        }
+
+                        row++;
+                    }
+                }
+                else
+                {
+                    return new HttpStatusCodeResult(System.Net.HttpStatusCode.BadRequest, "Tipo de reporte no válido.");
+                }
+
+                // Auto-fit columns
+                worksheet.Cells.AutoFitColumns();
+
+                var stream = new MemoryStream();
+                package.SaveAs(stream);
+                stream.Position = 0;
+
+                string fileName = $"{tipo}_{DateTime.Now:yyyyMMdd}.xlsx";
+                return File(stream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", fileName);
+            }
+        }
     }
 }

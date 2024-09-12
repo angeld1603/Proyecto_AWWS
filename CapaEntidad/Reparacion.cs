@@ -16,9 +16,9 @@ namespace CapaEntidad
 
         public string Descripcion { get; set; }
 
-        public string FechaIngreso { get; set; }
+        public DateTime FechaIngreso { get; set; }
 
-        public string FechaEntregaPrevista { get; set; }
+        public DateTime? FechaEntregaPrevista { get; set; }
 
         public string Estado { get; set; }
 

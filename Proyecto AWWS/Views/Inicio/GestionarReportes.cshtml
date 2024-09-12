@@ -1,4 +1,7 @@
-﻿
+﻿@{
+    ViewBag.Title = "Reportes";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
 
 <!DOCTYPE html>
 <html>
@@ -12,11 +15,6 @@
 <body class="bg-primary">
     <div id="layoutAuthentication">
         <div class="container mt-5">
-            <div class="d-flex justify-content-start mt-3">
-                <button onclick="window.location.href='@Url.Action("Inicio", "Inicio")'" class="btn btn-secondary btn-sm">
-                    <i class="fas fa-arrow-left"></i> Regresar
-                </button>
-            </div>
             <div class="row">
                 <div class="col-md-4">
                     <div class="card">
@@ -30,6 +28,7 @@
                                     <select class="form-select" id="reportOptions">
                                         <option value="" disabled selected>Seleccione una opción</option>
                                         <option value="Asistencias">Asistencias</option>
+                                        <option value="Reparaciones">Reparaciones</option>
                                     </select>
                                 </div>
 
@@ -84,15 +83,27 @@
             var selectElement = document.getElementById("reportOptions");
             var selectedOption = selectElement.options[selectElement.selectedIndex].value;
             var date = document.getElementById("dateFilter").value;
+            var formattedDate = date ? encodeURIComponent(date) : '';
+
+            var reportTable = document.getElementById("reportTable");
+            var tableBody = document.getElementById("reportTableBody");
+            var tableHead = document.querySelector("#reportTable thead");
+
+            tableBody.innerHTML = '';
+            tableHead.innerHTML = '';
 
             if (selectedOption === "Asistencias") {
-                var reportTable = document.getElementById("reportTable");
-                var tableBody = document.getElementById("reportTableBody");
-
-                fetch('@Url.Action("GenerarReporte", "Inicio")' + '?tipo=Asistencias&fecha=' + date)
+                fetch('@Url.Action("GenerarReporte", "Inicio")' + '?tipo=Asistencias&fecha=' + formattedDate)
                     .then(response => response.json())
                     .then(data => {
-                        tableBody.innerHTML = '';
+                        tableHead.innerHTML = `
+                            <tr>
+                                <th>Numero Documento</th>
+                                <th>Nombre</th>
+                                <th>Fecha Entrada</th>
+                                <th>Fecha Salida</th>
+                            </tr>
+                        `;
                         data.forEach(record => {
                             var row = document.createElement("tr");
                             row.innerHTML = `
@@ -100,6 +111,37 @@
                                 <td>${record.Nombre}</td>
                                 <td>${record.FechaEntrada}</td>
                                 <td>${record.FechaSalida}</td>
+                            `;
+                            tableBody.appendChild(row);
+                        });
+                        reportTable.style.display = 'block';
+                    })
+                    .catch(error => console.error('Error:', error));
+            } else if (selectedOption === "Reparaciones") {
+                fetch('@Url.Action("GenerarReporte", "Inicio")' + '?tipo=Reparaciones&fecha=' + formattedDate)
+                    .then(response => response.json())
+                    .then(data => {
+                        tableHead.innerHTML = `
+                            <tr>
+                                <th>Descripción</th>
+                                <th>Fecha Ingreso</th>
+                                <th>Fecha Entrega Prevista</th>
+                                <th>Estado</th>
+                                <th>ID Cliente</th>
+                                <th>Placa</th>
+                                <th>Numero Documento</th>
+                            </tr>
+                        `;
+                        data.forEach(record => {
+                            var row = document.createElement("tr");
+                            row.innerHTML = `
+                                <td>${record.Descripcion}</td>
+                                <td>${new Date(record.FechaIngreso).toLocaleDateString()}</td>
+                                <td>${record.FechaEntregaPrevista ? new Date(record.FechaEntregaPrevista).toLocaleDateString() : "N/A"}</td>
+                                <td>${record.Estado}</td>
+                                <td>${record.IdCliente}</td>
+                                <td>${record.placa}</td>
+                                <td>${record.NumeroDocumento}</td>
                             `;
                             tableBody.appendChild(row);
                         });
@@ -116,8 +158,8 @@
             var selectedOption = selectElement.options[selectElement.selectedIndex].value;
             var date = document.getElementById("dateFilter").value;
 
-            if (selectedOption === "Asistencias") {
-                var url = '@Url.Action("DescargarReporte", "Mecanico")' + '?tipo=Asistencias';
+            if (selectedOption === "Asistencias" || selectedOption === "Reparaciones") {
+                var url = '@Url.Action("GenerarReporteExcel", "Inicio")' + '?tipo=' + selectedOption;
 
                 if (date) url += '&fecha=' + date;
 
@@ -127,8 +169,12 @@
             }
         }
     </script>
+
+
+
 </body>
 </html>
+
 <style>
     .btn-mostrar, .btn-descargar {
         background-color: #31bc71;
@@ -139,7 +185,8 @@
         color: #fff;
     }
 
-        .btn-mostrar:hover {
+        .btn-mostrar:hover,
+        .btn-descargar:hover{
             background-color: #28a745;
         }
 
