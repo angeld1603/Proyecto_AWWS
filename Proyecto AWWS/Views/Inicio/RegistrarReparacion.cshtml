@@ -13,8 +13,10 @@
     <title>@ViewBag.Title</title>
     <link href="~/Content/css/styles.css" rel="stylesheet" />
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script> <!-- SweetAlert -->
     <script type="text/javascript">
         $(document).ready(function () {
+            // Manejar la búsqueda de clientes
             $('#placa').on('change', function () {
                 var placa = $(this).val();
                 if (placa) {
@@ -49,6 +51,22 @@
                     });
                 }
             });
+
+            // Mostrar SweetAlert si hay registro exitoso
+            var registroExitoso = '@TempData["RegistroExitoso"]';
+            if (registroExitoso === 'True') {
+                Swal.fire({
+                    title: '¡Registro Exitoso!',
+                    text: 'La reparación ha sido registrada correctamente.',
+                    icon: 'success',
+                    confirmButtonText: 'Aceptar'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        // Redirige a la vista de Reparaciones al hacer clic en "Aceptar"
+                        window.location.href = '@Url.Action("GestionarReparaciones", "Inicio")';
+                    }
+                });
+            }
         });
     </script>
 </head>
@@ -115,7 +133,7 @@
                                 }, "Value", "Text"),
                             new { @class = "form-control", required = "required" }
                         )
-                        @Html.ValidationMessageFor(model => model.Estado, "", new { @class = "text-danger"})
+                        @Html.ValidationMessageFor(model => model.Estado, "", new { @class = "text-danger" })
                     </div>
 
                     <button type="submit" class="btn btn-primary">Registrar</button>

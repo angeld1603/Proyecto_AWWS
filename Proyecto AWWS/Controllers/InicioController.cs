@@ -239,6 +239,8 @@ namespace Proyecto_AWWS.Controllers
                 // Insertar el nuevo documento
                 reparacionCollection.InsertOne(reparacion);
 
+                TempData["RegistroExitoso"] = true;
+
                 return RedirectToAction("GestionarReparaciones");
             }
 
