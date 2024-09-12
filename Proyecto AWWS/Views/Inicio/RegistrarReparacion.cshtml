@@ -15,59 +15,59 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script> <!-- SweetAlert -->
     <script type="text/javascript">
-        $(document).ready(function () {
-            // Manejar la búsqueda de clientes
-            $('#placa').on('change', function () {
-                var placa = $(this).val();
-                if (placa) {
-                    $.getJSON('@Url.Action("BuscarIdClientePorPlaca", "Inicio")', { placa: placa }, function (data) {
-                        $('#IdCliente').val(data.idCliente || "Cliente no encontrado");
-                    });
-                }
-            });
-
-            $('#btnBuscar').on('click', function () {
-                var placa = $('#placa').val();
-                if (placa) {
-                    fetch('@Url.Action("BuscarIdClientePorPlaca", "Inicio")?placa=' + placa, {
-                        method: 'GET',
-                        headers: {
-                            'Content-Type': 'application/json'
-                        },
-                        credentials: 'same-origin'
-                    })
-                    .then(response => {
-                        if (!response.ok) {
-                            throw new Error('Red error: ' + response.statusText);
-                        }
-                        return response.json();
-                    })
-                    .then(data => {
-                        $('#IdCliente').val(data.idCliente || "Cliente no encontrado");
-                    })
-                    .catch(error => {
-                        console.error('Error al buscar el cliente:', error);
-                        $('#IdCliente').val("Error en la búsqueda");
-                    });
-                }
-            });
-
-            // Mostrar SweetAlert si hay registro exitoso
-            var registroExitoso = '@TempData["RegistroExitoso"]';
-            if (registroExitoso === 'True') {
-                Swal.fire({
-                    title: '¡Registro Exitoso!',
-                    text: 'La reparación ha sido registrada correctamente.',
-                    icon: 'success',
-                    confirmButtonText: 'Aceptar'
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        // Redirige a la vista de Reparaciones al hacer clic en "Aceptar"
-                        window.location.href = '@Url.Action("GestionarReparaciones", "Inicio")';
-                    }
+    $(document).ready(function () {
+        // Manejar la búsqueda de clientes
+        $('#placa').on('change', function () {
+            var placa = $(this).val();
+            if (placa) {
+                $.getJSON('@Url.Action("BuscarIdClientePorPlaca", "Inicio")', { placa: placa }, function (data) {
+                    $('#IdCliente').val(data.idCliente || "Cliente no encontrado");
                 });
             }
         });
+
+        $('#btnBuscar').on('click', function () {
+            var placa = $('#placa').val();
+            if (placa) {
+                fetch('@Url.Action("BuscarIdClientePorPlaca", "Inicio")?placa=' + placa, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    credentials: 'same-origin'
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Red error: ' + response.statusText);
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    $('#IdCliente').val(data.idCliente || "Cliente no encontrado");
+                })
+                .catch(error => {
+                    console.error('Error al buscar el cliente:', error);
+                    $('#IdCliente').val("Error en la búsqueda");
+                });
+            }
+        });
+
+        // Mostrar SweetAlert si hay registro exitoso
+        var registroExitoso = '@TempData["RegistroExitoso"]';
+        if (registroExitoso === 'True') {
+            Swal.fire({
+                title: '¡Registro Exitoso!',
+                text: 'La reparación ha sido registrada correctamente.',
+                icon: 'success',
+                confirmButtonText: 'Aceptar'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // Opcionalmente, redirige a otra vista después de aceptar el mensaje
+                    window.location.href = '@Url.Action("GestionarReparaciones", "Inicio")';
+                }
+            });
+        }
+    });
     </script>
 </head>
 <body>

@@ -10,18 +10,20 @@ namespace Proyecto_AWWS.Controllers
 {
     public class ClienteController : Controller
     {
+        // Colecciones para manejar los datos de cada una de ellas
         private readonly IMongoCollection<Citas> citasCollection;
-
         private readonly IMongoCollection<Notificaciones> notificacionesCollection;
 
         public ClienteController()
         {
+            //inicializa el cliente de MongoDB con la cadena de conexion
             var client = new MongoClient("mongodb+srv://admin:zNG8KfdyNPLA44XZ@angeldior.53t301e.mongodb.net/");
 
+            // obtiene la base de datos del cliente MongoDB
             var database = client.GetDatabase("AWWS");
 
+            // se obtienen las colecciones (tablas) de la base de datos
             citasCollection = database.GetCollection<Citas>("Citas");
-
             notificacionesCollection = database.GetCollection<Notificaciones>("Notificaciones");
         }
 
@@ -97,11 +99,17 @@ namespace Proyecto_AWWS.Controllers
         {
             var notificacion = new Notificaciones
             {
-                Mensaje = $"Nueva cita solicitada:\nCliente: {cita.IdCliente}\nFecha y Hora: {cita.FechaHora}\nDescripción: {cita.Descripción}",
+                Mensaje = $@"
+            <div>
+                <p><strong>Cliente:</strong> {cita.IdCliente}</p>
+                <p><strong>Fecha y Hora:</strong> {cita.FechaHora.ToString("dd/MM/yyyy HH:mm")}</p>
+                <p><strong>Descripción:</strong> {cita.Descripción}</p>
+            </div>",
                 Fecha = DateTime.Now
             };
 
             notificacionesCollection.InsertOne(notificacion);
         }
+
     }
 }

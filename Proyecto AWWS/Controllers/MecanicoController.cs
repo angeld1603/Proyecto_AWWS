@@ -11,22 +11,22 @@ namespace Proyecto_AWWS.Controllers
 {
     public class MecanicoController : Controller
     {
+        // Colecciones para manejar los datos de cada una de ellas
         private readonly IMongoCollection<Mecanicos> mecanicosCollection;
-
         private readonly IMongoCollection<Asistencia> asistenciaCollection;
-
         private readonly IMongoCollection<Reparacion> reparacionCollection;
 
         public MecanicoController()
         {
-            var client = new MongoClient("mongodb+srv://admin:zNG8KfdyNPLA44XZ@angeldior.53t301e.mongodb.net/"); 
+            //inicializa el cliente de MongoDB con la cadena de conexion
+            var client = new MongoClient("mongodb+srv://admin:zNG8KfdyNPLA44XZ@angeldior.53t301e.mongodb.net/");
 
+            // obtiene la base de datos del cliente MongoDB
             var database = client.GetDatabase("AWWS");
 
+            // se obtienen las colecciones (tablas) de la base de datos
             mecanicosCollection = database.GetCollection<Mecanicos>("Mecanicos");
-
             asistenciaCollection = database.GetCollection<Asistencia>("Asistencia");
-
             reparacionCollection = database.GetCollection<Reparacion>("Reparacion");
         }
 
@@ -40,9 +40,9 @@ namespace Proyecto_AWWS.Controllers
             // Recuperar el número de documento desde la sesión y convertirlo a entero
             if (int.TryParse(Session["NumeroDocumento"]?.ToString(), out int numeroDocumento))
             {
-                // Obtener las reparaciones asignadas al mecánico
+                // Obtener las reparaciones asignadas al mecánico que no están completas
                 var listaReparaciones = await reparacionCollection
-                    .Find(r => r.NumeroDocumento == numeroDocumento)
+                    .Find(r => r.NumeroDocumento == numeroDocumento && r.Estado != "Completado")
                     .ToListAsync();
 
                 return View(listaReparaciones);
@@ -54,25 +54,29 @@ namespace Proyecto_AWWS.Controllers
             }
         }
 
+
         [HttpPost]
-        public ActionResult ActualizarEstado(string id, string nuevoEstado)
+        public async Task<JsonResult> ActualizarEstado(string id, string nuevoEstado)
         {
             if (!string.IsNullOrEmpty(id) && !string.IsNullOrEmpty(nuevoEstado))
             {
                 var filter = Builders<Reparacion>.Filter.Eq(r => r.Id, id);
                 var update = Builders<Reparacion>.Update.Set(r => r.Estado, nuevoEstado);
-                reparacionCollection.UpdateOne(filter, update);
+                var result = await reparacionCollection.UpdateOneAsync(filter, update);
 
-                TempData["SuccessMessage"] = "Estado de la reparación actualizado correctamente.";
+                if (result.ModifiedCount > 0)
+                {
+                    return Json(new { success = true, message = "Estado de la reparación actualizado correctamente." });
+                }
+                else
+                {
+                    return Json(new { success = false, message = "No se pudo actualizar el estado de la reparación." });
+                }
             }
-            else
-            {
-                TempData["ErrorMessage"] = "No se pudo actualizar el estado de la reparación.";
-            }
-
-            return RedirectToAction("GestionarReparaciones"); // Asegúrate de que esta vista existe
+            return Json(new { success = false, message = "Datos inválidos." });
         }
-        
+
+
         public ActionResult Asistencia()
         {
             var mecanicos = asistenciaCollection.Find(a => true).ToList();

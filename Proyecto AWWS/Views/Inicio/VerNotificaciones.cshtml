@@ -10,7 +10,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Notificaciones</title>
+    <title>@ViewBag.Title</title>
     <link href="~/Content/css/styles.css" rel="stylesheet" />
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 </head>
@@ -33,7 +33,7 @@
                         @foreach (var notificacion in Model)
                         {
                             <tr>
-                                <td>@notificacion.Mensaje</td>
+                                <td>@Html.Raw(notificacion.Mensaje)</td>
                                 <td>@notificacion.Fecha.ToString("g")</td>
                                 <td>
                                     <form action="@Url.Action("MarcarComoLeida", "Inicio")" method="post">
@@ -89,6 +89,7 @@
             padding: 1rem;
             vertical-align: top;
             border-bottom: 1px solid #dee2e6;
+            word-break: break-word; /* Asegura que el texto largo no desborde */
         }
 
     .table-striped tbody tr:nth-of-type(odd) {

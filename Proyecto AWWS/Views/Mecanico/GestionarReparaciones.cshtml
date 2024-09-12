@@ -12,6 +12,7 @@
     <title>Reparaciones</title>
     <link href="~/Content/css/styles.css" rel="stylesheet" />
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 <body>
     <div class="container">
@@ -38,18 +39,11 @@
                                 <tr>
                                     <td>@reparacion.Id</td>
                                     <td>@reparacion.Descripcion</td>
-                                    <td>@reparacion.FechaIngreso</td> <!-- Actualización aquí -->
-                                    <td>@reparacion.FechaEntregaPrevista</td> <!-- Actualización aquí -->
+                                    <td>@reparacion.FechaIngreso</td>
+                                    <td>@reparacion.FechaEntregaPrevista</td>
                                     <td>@reparacion.Estado</td>
                                     <td>
-                                        <form action="@Url.Action("ActualizarEstado", "Mecanico")" method="post">
-                                            <input type="hidden" name="id" value="@reparacion.Id" />
-                                            <select name="nuevoEstado" class="form-control">
-                                                <option value="En progreso" @(reparacion.Estado == "En Progreso" ? "selected" : "")>En progreso</option>
-                                                <option value="Completado" @(reparacion.Estado == "Completado" ? "selected" : "")>Completado</option>
-                                            </select>
-                                            <button type="submit" class="btn btn-primary mt-2">Actualizar</button>
-                                        </form>
+                                        <button class="btn btn-actualizar update-status" data-id="@reparacion.Id" data-estado="@reparacion.Estado">Actualizar</button>
                                     </td>
                                 </tr>
                             }
@@ -63,9 +57,62 @@
             }
         </div>
     </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            document.querySelectorAll('.update-status').forEach(button => {
+                button.addEventListener('click', function() {
+                    const id = this.getAttribute('data-id');
+                    const estadoActual = this.getAttribute('data-estado');
+
+                    Swal.fire({
+                        title: 'Actualizar Estado',
+                        input: 'select',
+                        inputOptions: {
+                            'En progreso': 'En progreso',
+                            'Completado': 'Completado'
+                        },
+                        inputValue: estadoActual,
+                        showCancelButton: true,
+                        confirmButtonText: 'Actualizar',
+                        cancelButtonText: 'Cancelar',
+                        inputValidator: (value) => {
+                            if (!value) {
+                                return '¡Tienes que elegir un estado!';
+                            }
+                        }
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            fetch('@Url.Action("ActualizarEstado", "Mecanico")', {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json'
+                                },
+                                body: JSON.stringify({
+                                    id: id,
+                                    nuevoEstado: result.value
+                                })
+                            }).then(response => response.json())
+                              .then(data => {
+                                  Swal.fire({
+                                      icon: data.success ? 'success' : 'error',
+                                      title: data.success ? 'Éxito' : 'Error',
+                                      text: data.message
+                                  }).then(() => {
+                                      if (data.success) {
+                                          // Actualiza la tabla en lugar de recargar la página
+                                          location.reload(); // Puedes ajustar esto si prefieres actualizar solo la fila
+                                      }
+                                  });
+                              });
+                        }
+                    });
+                });
+            });
+        });
+    </script>
 </body>
 </html>
-
 
 <style>
     /* Asegúrate de que el CSS sea compatible con la vista, puedes añadir ajustes específicos aquí si es necesario */
@@ -120,7 +167,7 @@
             border: 1px solid #dee2e6;
         }
 
-    .btn-primary {
+    .btn-actualizar {
         background-color: #0d6efd;
         border-color: #0d6efd;
         color: #fff;
@@ -128,7 +175,7 @@
         font-size: 0.9rem;
     }
 
-        .btn-primary:hover {
+        .btn-actualizar:hover {
             background-color: #0a58ca;
             border-color: #0a58ca;
         }
