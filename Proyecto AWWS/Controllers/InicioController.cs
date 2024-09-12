@@ -350,8 +350,10 @@ namespace Proyecto_AWWS.Controllers
             if (ModelState.IsValid)
             {
                 vehiculoCollection.InsertOne(vehiculos);
-                return RedirectToAction("GestionarVehiculos");
+                TempData["RegistroExitoso"] = true;
+                return RedirectToAction("RegistrarVehiculos"); 
             }
+
             return View(vehiculos);
         }
 

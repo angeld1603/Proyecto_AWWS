@@ -125,6 +125,9 @@
         }
 </style>
 
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script> <!-- SweetAlert -->
+
 <script>
     function buscarCliente() {
         var idCliente = document.getElementById('IdCliente').value;
@@ -151,4 +154,28 @@
             });
         }
     }
+
+    $(document).ready(function () {
+        // Permitir solo letras y espacios en el campo Nombre
+        $("#Nombre").on("input", function () {
+            this.value = this.value.replace(/[^a-zA-Z\s]/g, '');
+        });
+
+        // Mostrar SweetAlert si el registro fue exitoso
+        var registroExitoso = '@TempData["RegistroExitoso"]';
+
+        if (registroExitoso === 'True') {
+            Swal.fire({
+                title: '¡Registro Exitoso!',
+                text: 'El vehículo ha sido registrado correctamente.',
+                icon: 'success',
+                confirmButtonText: 'Aceptar'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // Redirige a la vista de Vehículos al hacer clic en "Aceptar"
+                    window.location.href = '@Url.Action("GestionarVehiculos", "Inicio")';
+                }
+            });
+        }
+    });
 </script>
